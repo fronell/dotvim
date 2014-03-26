@@ -4,43 +4,43 @@
 set nocompatible    " Break vi compatbility
 
 " Enable pathogen
-"call pathogen#infect()
+call pathogen#infect()
 
 " [====BEGIN VUNDLE====]
-filetype off                  " required up here for Vundle
+"filetype off                  " required up here for Vundle
 
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+"set rtp+=~/.vim/bundle/vundle/
+"call vundle#rc()
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/vundle'
+"Plugin 'gmarik/vundle'
 
 " Install bundles
 " :PluginInstall
 
 " scripts on GitHub repos
-Plugin 'vim-ruby/vim-ruby'
+"Plugin 'vim-ruby/vim-ruby'
 " Git wrapper
-Plugin 'tpope/vim-fugitive'
+"Plugin 'tpope/vim-fugitive'
 " runs files through external syntax checkers and displays errors
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 " Provides simple method to line up text
-Plugin 'godlygeek/tabular'
+"Plugin 'godlygeek/tabular'
 " Full path fuzzy file, buffer, mru, tag, ... finder for Vim.
-Plugin 'kien/ctrlp.vim'
+"Plugin 'kien/ctrlp.vim'
 " helps to end structures automatically such as adding an end in Ruby
-Plugin 'tpope/vim-endwise'
+"Plugin 'tpope/vim-endwise'
 " Filesystem explorer
-Plugin 'scrooloose/nerdtree'
+"Plugin 'scrooloose/nerdtree'
 " Provides navigation window for tags
-Plugin 'majutsushi/tagbar'
+"Plugin 'majutsushi/tagbar'
 " Easy to use, file-type sensible comments for Vim
-Plugin 'tpope/vim-commentary'
+"Plugin 'tpope/vim-commentary'
 " Buffer explorer
-Plugin 'techlivezheng/vim-plugin-minibufexpl'
+"Plugin 'techlivezheng/vim-plugin-minibufexpl'
 " Tab completion
-Plugin 'ervandew/supertab'
+"Plugin 'ervandew/supertab'
 
 " Enable filetype plugin
 filetype plugin indent on
