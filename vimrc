@@ -178,10 +178,10 @@ map <Leader>ch <C-W>h<C-W>c
 map <Leader>cl <C-W>l<C-W>c
 
 " Toggle line numbers
-map <silent> <Leader>n :setlocal number!<CR>
+map <silent> <Leader>N :setlocal number!<CR>
 
 " Toggle word wrap
-map <silent> <Leader>w :setlocal wrap!<CR>
+map <silent> <Leader>W :setlocal wrap!<CR>
 
 " Disable color column
 map <silent> <Leader>l :setlocal colorcolumn=80<CR>
