@@ -88,8 +88,12 @@ set so=7
 set wildmode=longest,list,full
 set wildmenu "Turn on WiLd menu
 " Ignore these files during tab completion
-set wildignore+=.DS_Store,.git,.hg,.svn
-set wildignore+=*~,*.swp,*.tmp,*.zip
+" Common
+set wildignore+=.git,.hg,.svn,*.swp,*.tmp,*.zip,*.pdf
+" OSX/Linux
+set wildignore+=.DS_Store,*.so                      
+" Windows
+set wildignore+=*.exe,*.dll,*.doc*,*.xls*            
 
 " Set backspace config
 set backspace=eol,start,indent
@@ -185,12 +189,22 @@ map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
 
 " prevents pasted text from getting auto-indented
 " but it breaks auto indent and other features when enabled
-map <Leader>p :setlocal paste!<CR>
+map <Leader>P :setlocal paste!<CR>
 
 map <leader>fi :setlocal foldmethod=indent<CR>
 map <leader>fs :setlocal foldmethod=syntax<CR>
-map <leader>e :TNERDTreeToggle<CR>
-map <leader>t :TlistToggle<CR>
+map <leader>N :NERDTreeToggle<CR>
+map <leader>t :TagbarToggle<CR>
+map <leader>T :TlistToggle<CR>
+
+" ctrl-p mappings
+map <leader>pb :CtrlPBuffer<CR>
+map <leader>pm :CtrlPMRU<CR>
+map <leader>pt :CtrlPTag<CR>
+" Search Files
+map <leader>pf :CtrlP<CR>
+" Search everything
+map <leader>pp :CtrlPMixed<CR>
 
 " Use tab for omnicompletion 
 "let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
