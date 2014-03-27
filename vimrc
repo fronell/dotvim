@@ -1,57 +1,19 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set nocompatible    " Break vi compatbility
+set nocompatible    " Break vi compatbility, should be set first
 
 " Enable pathogen
 call pathogen#infect()
 
-" [====BEGIN VUNDLE====]
-"filetype off                  " required up here for Vundle
-
-" set the runtime path to include Vundle and initialize
-"set rtp+=~/.vim/bundle/vundle/
-"call vundle#rc()
-
-" let Vundle manage Vundle, required
-"Plugin 'gmarik/vundle'
-
-" Install bundles
-" :PluginInstall
-
-" scripts on GitHub repos
-"Plugin 'vim-ruby/vim-ruby'
-" Git wrapper
-"Plugin 'tpope/vim-fugitive'
-" runs files through external syntax checkers and displays errors
-"Plugin 'scrooloose/syntastic'
-" Provides simple method to line up text
-"Plugin 'godlygeek/tabular'
-" Full path fuzzy file, buffer, mru, tag, ... finder for Vim.
-"Plugin 'kien/ctrlp.vim'
-" helps to end structures automatically such as adding an end in Ruby
-"Plugin 'tpope/vim-endwise'
-" Filesystem explorer
-"Plugin 'scrooloose/nerdtree'
-" Provides navigation window for tags
-"Plugin 'majutsushi/tagbar'
-" Easy to use, file-type sensible comments for Vim
-"Plugin 'tpope/vim-commentary'
-" Buffer explorer
-"Plugin 'techlivezheng/vim-plugin-minibufexpl'
-" Tab completion
-"Plugin 'ervandew/supertab'
-
-" Enable filetype plugin
 filetype plugin indent on
-" [====END VUNDLE====]
 
 " Leader setings (needs to be above any other use of <Leader>)
 let mapleader = ","
 
 " Leave this disabled because it prevents highlighting text to copy 
 " to the clipboard in PuTTY -- csworn 2011.08.03
-" set mouse=a		    " Enable mouse usage (all modes) in terminals
+"set mouse=a		    " Enable mouse usage (all modes) in terminals
 
 " Have to place up here so the ruler displays on gVim in
 " Windows -- csworn 2011.08.03
@@ -166,21 +128,13 @@ set ruler "Always show current position
 " opened
 set nobackup
 
-" Returns true if paste mode is enabled
-function! PasteEnabled()
-  if &paste
-    return 'PASTE MODE  '
-  en
-    return ''
-endfunction
-
 " Reference this page for status line syntax:
 " http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html 
-set laststatus=2                        " always show the status bar
-set statusline=[%n]\                    " buffer number
+set laststatus=2                         " always show the status bar
+set statusline=[%n]\                     " buffer number
 set statusline+=[%{&ff}]\                " file format
 set statusline+=%F\ %m\ %r               " filename, modified, readonly
-set statusline+=%{PasteEnabled()}        " Shows if paste mode is enabled
+set statusline+=%{&paste?'[paste]':''}\  " Shows if paste mode is enabld
 set statusline+=%{fugitive#statusline()} " fugitive
 set statusline+=%=%5l,%v\                " current line,current row
 set statusline+=%L[%p%%]                 " total lines[% position]
@@ -231,13 +185,6 @@ map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
 
 " prevents pasted text from getting auto-indented
 " but it breaks auto indent and other features when enabled
-"set paste
-"set pastetoggle=<Leader>p
-" When with this option to toggle paste mode because it
-" works with the PasteEnabled function
-" paste? shows the value after the key press but I have
-" the function to show me
-" map <Leader>p :set invpaste paste?<CR>
 map <Leader>p :setlocal paste!<CR>
 
 map <leader>fi :setlocal foldmethod=indent<CR>
