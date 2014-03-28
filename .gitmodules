@@ -37,6 +37,3 @@
 [submodule "bundle/vim-easytags"]
 	path = bundle/vim-easytags
 	url = https://github.com/xolox/vim-easytags
-[submodule "bundle/vim-bufferline"]
-	path = bundle/vim-bufferline
-	url = https://github.com/bling/vim-bufferline
