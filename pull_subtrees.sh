@@ -13,3 +13,4 @@ git subtree pull --prefix bundle/vim-endwise https://github.com/tpope/vim-endwis
 git subtree pull --prefix bundle/vim-fugitive https://github.com/tpope/vim-fugitive.git master --squash
 git subtree pull --prefix bundle/vim-markdown https://github.com/plasticboy/vim-markdown.git master --squash
 git subtree pull --prefix bundle/vim-ruby https://github.com/vim-ruby/vim-ruby.git master --squash
+git subtree pull --prefix bundle/vim-bufferline https://github.com/bling/vim-bufferline.git master --squash
