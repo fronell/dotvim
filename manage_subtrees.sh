@@ -17,5 +17,6 @@ git subtree $ACTION https://github.com/tpope/vim-fugitive.git --prefix bundle/vi
 git subtree $ACTION https://github.com/plasticboy/vim-markdown.git --prefix bundle/vim-markdown master --squash
 git subtree $ACTION https://github.com/vim-ruby/vim-ruby.git --prefix bundle/vim-ruby master --squash
 git subtree $ACTION https://github.com/vim-scripts/Align --prefix bundle/align master --squash
-git subtree $ACTION https://github.com/Shougo/neocomplcache.vim.git --prefix bundle/neocomplcache master --squash
+# The autocompletion was too much.  I don't need a prompt on every word
+#git subtree $ACTION https://github.com/Shougo/neocomplcache.vim.git --prefix bundle/neocomplcache master --squash
 git subtree $ACTION https://github.com/vim-scripts/AutoComplPop --prefix bundle/AutoComplPop master --squash
