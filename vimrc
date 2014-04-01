@@ -193,7 +193,7 @@ map <Leader>P :setlocal paste!<CR>
 
 map <leader>fi :setlocal foldmethod=indent<CR>
 map <leader>fs :setlocal foldmethod=syntax<CR>
-map <leader>N :NERDTreeToggle<CR>
+map <leader>n :NERDTreeToggle<CR>
 map <leader>t :TagbarToggle<CR>
 map <leader>T :TlistToggle<CR>
 
