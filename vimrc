@@ -36,7 +36,8 @@ if has("gui_running")
   set guioptions-=r  "remove right-hand scroll bar
   set guioptions-=l  "remove left-hand scroll bar
 else
-  colorscheme pablo
+  colorscheme solarized
+  "colorscheme pablo
   set background=dark
   set nu
 endif

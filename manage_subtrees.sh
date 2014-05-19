@@ -20,3 +20,4 @@ git subtree $ACTION https://github.com/vim-scripts/Align --prefix bundle/align m
 # The autocompletion was too much.  I don't need a prompt on every word
 #git subtree $ACTION https://github.com/Shougo/neocomplcache.vim.git --prefix bundle/neocomplcache master --squash
 git subtree $ACTION https://github.com/vim-scripts/AutoComplPop --prefix bundle/AutoComplPop master --squash
+git subtree $ACTION https://github.com/altercation/vim-colors-solarized.git --prefix bundle/vim-colors-solarized master --squash
