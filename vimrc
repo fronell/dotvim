@@ -228,6 +228,9 @@ set hidden
 " Enable tag mode in CtrlP
 let g:ctrlp_extensions = ['tag']
 
+" Place taglist on the right side
+let Tlist_Use_Right_Window = 1
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => PYTHON SPECIFIC SETTINGS
