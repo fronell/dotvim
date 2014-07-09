@@ -1,6 +1,6 @@
-" endwise.vim - EndWise
+" Location:     plugin/endwise.vim
 " Author:       Tim Pope <http://tpo.pe/>
-" Version:      1.1
+" Version:      1.2
 " License:      Same as Vim itself.  See :help license
 " GetLatestVimScripts: 2386 1 :AutoInstall: endwise.vim
 
@@ -24,7 +24,7 @@ augroup endwise " {{{1
   autocmd FileType ruby
         \ let b:endwise_addition = 'end' |
         \ let b:endwise_words = 'module,class,def,if,unless,case,while,until,begin,do' |
-        \ let b:endwise_pattern = '^\(.*=\)\?\s*\zs\%(module\|class\|def\|if\|unless\|case\|while\|until\|for\|\|begin\)\>\%(.*[^.:@$]\<end\>\)\@!\|\<do\ze\%(\s*|.*|\)\=\s*$' |
+        \ let b:endwise_pattern = '^\(.*=\)\?\s*\%(private\s\+\|protected\s\+\|public\s\+\|module_function\s\+\)*\zs\%(module\|class\|def\|if\|unless\|case\|while\|until\|for\|\|begin\)\>\%(.*[^.:@$]\<end\>\)\@!\|\<do\ze\%(\s*|.*|\)\=\s*$' |
         \ let b:endwise_syngroups = 'rubyModule,rubyClass,rubyDefine,rubyControl,rubyConditional,rubyRepeat'
   autocmd FileType sh,zsh
         \ let b:endwise_addition = '\=submatch(0)=="then" ? "fi" : submatch(0)=="case" ? "esac" : "done"' |
@@ -54,7 +54,16 @@ augroup endwise " {{{1
         \ let b:endwise_addition = 'end' |
         \ let b:endwise_words = 'function,if,for' |
         \ let b:endwise_syngroups = 'matlabStatement,matlabFunction,matlabConditional,matlabRepeat'
+  autocmd FileType * call s:abbrev()
 augroup END " }}}1
+
+function! s:abbrev()
+  if exists('g:endwise_abbreviations')
+    for word in split(get(b:, 'endwise_words', ''), ',')
+      execute 'iabbrev <buffer><script>' word word.'<CR><SID>DiscretionaryEnd<Space><C-U><BS>'
+    endfor
+  endif
+endfunction
 
 " Maps {{{1
 
@@ -76,7 +85,7 @@ if !exists('g:endwise_no_mappings')
     exe "imap <CR> ".maparg('<CR>', 'i')."<Plug>DiscretionaryEnd"
   else
     imap <script> <C-X><CR> <CR><SID>AlwaysEnd
-    imap <script> <CR>      <CR><SID>DiscretionaryEnd
+    imap <CR> <CR><Plug>DiscretionaryEnd
   endif
 endif
 
@@ -110,7 +119,11 @@ function! s:crend(always)
   let word  = matchstr(getline(lnum),beginpat)
   let endword = substitute(word,'.*',b:endwise_addition,'')
   let y = n.endword."\<C-O>O"
-  let endpat = '\w\@<!'.endword.'\w\@!'
+  if b:endwise_addition[0:1] ==# '\='
+    let endpat = '\w\@<!'.endword.'\w\@!'
+  else
+    let endpat = '\w\@<!'.substitute('\w\+', '.*', b:endwise_addition, '').'\w\@!'
+  endif
   if a:always
     return y
   elseif col <= 0 || synIDattr(synID(lnum,col,1),'name') !~ '^'.synpat.'$'
