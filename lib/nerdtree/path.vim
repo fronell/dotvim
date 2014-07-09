@@ -103,6 +103,10 @@ function! s:Path.compareTo(path)
     elseif thisSS > thatSS
         return 1
     else
+        if !g:NERDTreeSortHiddenFirst
+            let thisPath = substitute(thisPath, '^[._]', '', '')
+            let thatPath = substitute(thatPath, '^[._]', '', '')
+        endif
         "if the sort sequences are the same then compare the paths
         "alphabetically
         let pathCompare = g:NERDTreeCaseSensitiveSort ? thisPath <# thatPath : thisPath <? thatPath
@@ -141,6 +145,7 @@ function! s:Path.Create(fullpath)
 
         "assume its a file and create
         else
+            call s:Path.createParentDirectories(a:fullpath)
             call writefile([], a:fullpath)
         endif
     catch
@@ -161,9 +166,11 @@ function! s:Path.copy(dest)
         throw "NERDTree.CopyingNotSupportedError: Copying is not supported on this OS"
     endif
 
+    call s:Path.createParentDirectories(a:dest)
+
     let dest = s:Path.WinToUnixPath(a:dest)
 
-    let cmd = g:NERDTreeCopyCmd . " " . escape(self.str(), nerdtree#escChars()) . " " . escape(dest, nerdtree#escChars())
+    let cmd = g:NERDTreeCopyCmd . " " . escape(self.str(), self._escChars()) . " " . escape(dest, self._escChars())
     let success = system(cmd)
     if success != 0
         throw "NERDTree.CopyError: Could not copy ''". self.str() ."'' to: '" . a:dest . "'"
@@ -194,6 +201,20 @@ function! s:Path.copyingWillOverwrite(dest)
         if filereadable(path)
             return 1
         endif
+    endif
+endfunction
+
+"FUNCTION: Path.createParentDirectories(path) {{{1
+"
+"create parent directories for this path if needed
+"without throwing any errors is those directories already exist
+"
+"Args:
+"path: full path of the node whose parent directories may need to be created
+function! s:Path.createParentDirectories(path)
+    let dir_path = fnamemodify(a:path, ':h')
+    if !isdirectory(dir_path)
+        call mkdir(dir_path, 'p')
     endif
 endfunction
 
@@ -266,6 +287,15 @@ endfunction
 function! s:Path.exists()
     let p = self.str()
     return filereadable(p) || isdirectory(p)
+endfunction
+
+"FUNCTION: Path._escChars() {{{1
+function! s:Path._escChars()
+    if nerdtree#runningWindows()
+        return " `\|\"#%&,?()\*^<>"
+    endif
+
+    return " \\`\|\"#%&,?()\*^<>[]"
 endfunction
 
 "FUNCTION: Path.getDir() {{{1
@@ -604,7 +634,7 @@ endfunction
 "
 " returns a string that can be used with :cd
 function! s:Path._strForCd()
-    return escape(self.str(), nerdtree#escChars())
+    return escape(self.str(), self._escChars())
 endfunction
 
 "FUNCTION: Path._strForEdit() {{{1
@@ -612,7 +642,7 @@ endfunction
 "Return: the string for this path that is suitable to be used with the :edit
 "command
 function! s:Path._strForEdit()
-    let p = escape(self.str({'format': 'UI'}), nerdtree#escChars())
+    let p = escape(self.str({'format': 'UI'}), self._escChars())
     let cwd = getcwd() . s:Path.Slash()
 
     "return a relative path if we can
@@ -652,7 +682,7 @@ function! s:Path._strForGlob()
     let toReturn = lead . join(self.pathSegments, s:Path.Slash())
 
     if !nerdtree#runningWindows()
-        let toReturn = escape(toReturn, nerdtree#escChars())
+        let toReturn = escape(toReturn, self._escChars())
     endif
     return toReturn
 endfunction
