@@ -20,3 +20,4 @@ git subtree $ACTION https://github.com/tpope/vim-repeat.git --prefix bundle/vim-
 git subtree $ACTION https://github.com/godlygeek/tabular.git --prefix bundle/tabular master --squash
 git subtree $ACTION https://github.com/othree/vim-autocomplpop.git --prefix bundle/autocomplpop master --squash
 git subtree $ACTION https://github.com/vim-scripts/L9.git --prefix bundle/L9 master --squash
+git subtree $ACTION https://github.com/scrooloose/nerdcommenter.git --prefix bundle/nerdcommenter master --squash
