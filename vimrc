@@ -228,6 +228,9 @@ let g:ctrlp_extensions = ['tag']
 " Place taglist on the right side
 let Tlist_Use_Right_Window = 1
 
+" AutoComplPop options
+let g:acp_behaviorKeywordLength = 3
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => PYTHON SPECIFIC SETTINGS
