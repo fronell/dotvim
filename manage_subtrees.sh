@@ -20,8 +20,9 @@ git subtree $ACTION https://github.com/tpope/vim-repeat.git --prefix bundle/vim-
 git subtree $ACTION https://github.com/godlygeek/tabular.git --prefix bundle/tabular master --squash
 # Official autocomplpop version that automatically selects 1st item in popup menu
 #git subtree $ACTION https://github.com/othree/vim-autocomplpop.git --prefix bundle/autocomplpop master --squash
-#git subtree $ACTION https://github.com/vim-scripts/L9.git --prefix bundle/L9 master --squash
 # Fork that does not automatically select first item in popup menu
 # More here: https://bitbucket.org/ns9tks/vim-autocomplpop/issue/53/make-autoselection-of-the-first-item
 git subtree $ACTION https://github.com/dirkwallenstein/vim-autocomplpop --prefix bundle/autocomplpop master --squash
+# Dependency for autocomplpop
+git subtree $ACTION https://github.com/vim-scripts/L9.git --prefix bundle/L9 master --squash
 git subtree $ACTION https://github.com/scrooloose/nerdcommenter.git --prefix bundle/nerdcommenter master --squash
