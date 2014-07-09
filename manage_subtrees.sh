@@ -17,3 +17,6 @@ git subtree $ACTION https://github.com/vim-scripts/Align --prefix bundle/align m
 git subtree $ACTION https://github.com/altercation/vim-colors-solarized.git --prefix bundle/vim-colors-solarized master --squash
 git subtree $ACTION https://github.com/tpope/vim-surround.git --prefix bundle/vim-surround master --squash
 git subtree $ACTION https://github.com/tpope/vim-repeat.git --prefix bundle/vim-repeat master --squash
+git subtree $ACTION https://github.com/godlygeek/tabular.git --prefix bundle/tabular master --squash
+git subtree $ACTION https://github.com/othree/vim-autocomplpop.git --prefix bundle/autocomplpop master --squash
+git subtree $ACTION https://github.com/vim-scripts/L9.git --prefix bundle/L9 master --squash
