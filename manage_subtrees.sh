@@ -14,7 +14,6 @@ git subtree $ACTION https://github.com/tpope/vim-endwise.git --prefix bundle/vim
 git subtree $ACTION https://github.com/tpope/vim-fugitive.git --prefix bundle/vim-fugitive master --squash
 git subtree $ACTION https://github.com/vim-ruby/vim-ruby.git --prefix bundle/vim-ruby master --squash
 git subtree $ACTION https://github.com/vim-scripts/Align --prefix bundle/align master --squash
-git subtree $ACTION https://github.com/Shougo/neocomplete.vim.git --prefix bundle/neocomplete master --squash
 git subtree $ACTION https://github.com/altercation/vim-colors-solarized.git --prefix bundle/vim-colors-solarized master --squash
 git subtree $ACTION https://github.com/tpope/vim-surround.git --prefix bundle/vim-surround master --squash
 git subtree $ACTION https://github.com/tpope/vim-repeat.git --prefix bundle/vim-repeat master --squash
