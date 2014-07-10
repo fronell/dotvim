@@ -185,8 +185,9 @@ map <silent> <Leader>N :setlocal number!<CR>
 map <silent> <Leader>W :setlocal wrap!<CR>
 
 " Disable color column
-map <silent> <Leader>l :setlocal colorcolumn=80<CR>
-map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
+" I don't use these and <leader>l is mapped to Location List for now
+"map <silent> <Leader>l :setlocal colorcolumn=80<CR>
+"map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
 
 " prevents pasted text from getting auto-indented
 " but it breaks auto indent and other features when enabled
