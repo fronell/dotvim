@@ -114,9 +114,9 @@ set mat=2 "How many tenths of a second to blink
 
 "Folding
 "set foldmethod=syntax
-"set foldmethod=indent   "fold based on indent
+set foldmethod=indent   " fold based on indent, more compatible than syntax
 "set foldnestmax=3       "deepest fold is 3 levels
-"set nofoldenable        "dont fold by default
+set nofoldenable        "dont fold by default
 "set foldlevel=1
 "set foldcolumn=1        "set the # of fold column indicators
 
@@ -210,6 +210,15 @@ map <leader>pf :CtrlP<CR>
 " Search everything
 map <leader>pp :CtrlPMixed<CR>
 
+" Quickfix list
+" Not needed because of toggle implemented by togglelist plugin
+"map <leader>qo :copen<CR>
+"map <leader>qc :cclose<CR>
+map ]q :cnext<CR>
+map [q :cprev<CR>
+map ]Q :clast<CR>
+map [Q :cfirst<CR>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => MISC
@@ -230,6 +239,9 @@ let Tlist_Use_Right_Window = 1
 
 " AutoComplPop options
 let g:acp_behaviorKeywordLength = 3
+
+" NERDTree
+let NERDTreeWinSize = 50
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

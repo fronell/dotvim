@@ -26,3 +26,4 @@ git subtree $ACTION https://github.com/dirkwallenstein/vim-autocomplpop --prefix
 # Dependency for autocomplpop
 git subtree $ACTION https://github.com/vim-scripts/L9.git --prefix bundle/L9 master --squash
 git subtree $ACTION https://github.com/scrooloose/nerdcommenter.git --prefix bundle/nerdcommenter master --squash
+git subtree $ACTION https://github.com/milkypostman/vim-togglelist.git --prefix bundle/togglelist master --squash
