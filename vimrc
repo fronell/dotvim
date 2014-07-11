@@ -113,10 +113,10 @@ set showmatch "Show matching bracets when text indicator is over them
 set mat=2 "How many tenths of a second to blink
 
 "Folding
-"set foldmethod=syntax
-set foldmethod=indent   " fold based on indent, more compatible than syntax
+set foldmethod=syntax    " Found syntax produced better results than indent
+"set foldmethod=indent   " fold based on indent
 "set foldnestmax=3       "deepest fold is 3 levels
-set nofoldenable        "dont fold by default
+set nofoldenable        "dont fold by default when opening files
 "set foldlevel=1
 "set foldcolumn=1        "set the # of fold column indicators
 
