@@ -27,3 +27,5 @@ git subtree $ACTION https://github.com/dirkwallenstein/vim-autocomplpop --prefix
 git subtree $ACTION https://github.com/vim-scripts/L9.git --prefix bundle/L9 master --squash
 git subtree $ACTION https://github.com/scrooloose/nerdcommenter.git --prefix bundle/nerdcommenter master --squash
 git subtree $ACTION https://github.com/milkypostman/vim-togglelist.git --prefix bundle/togglelist master --squash
+git subtree $ACTION https://github.com/terryma/vim-smooth-scroll.git --prefix bundle/vim-smooth-scroll master --squash
+git subtree $ACTION https://github.com/ton/vim-bufsurf.git --prefix bundle/vim-bufsurf master --squash

@@ -220,6 +220,13 @@ map [q :cprev<CR>
 map ]Q :clast<CR>
 map [Q :cfirst<CR>
 
+" Buffer navigation
+" Toggle between last used buffers
+" Notice how its the ^ and not 6
+map <Leader>bt <C-^>
+map <Leader>bb :BufSurfBack<CR>
+map <Leader>bf :BufSurfForward<CR>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => MISC
@@ -243,6 +250,12 @@ let g:acp_behaviorKeywordLength = 3
 
 " NERDTree
 let NERDTreeWinSize = 50
+
+" vim-smooth-scroll
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 1)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 1)<CR>
+noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 2)<CR>
+noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 2)<CR>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
