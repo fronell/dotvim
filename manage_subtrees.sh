@@ -18,8 +18,6 @@ git subtree $ACTION https://github.com/altercation/vim-colors-solarized.git --pr
 git subtree $ACTION https://github.com/tpope/vim-surround.git --prefix bundle/vim-surround master --squash
 git subtree $ACTION https://github.com/tpope/vim-repeat.git --prefix bundle/vim-repeat master --squash
 git subtree $ACTION https://github.com/godlygeek/tabular.git --prefix bundle/tabular master --squash
-# Official autocomplpop version that automatically selects 1st item in popup menu
-#git subtree $ACTION https://github.com/othree/vim-autocomplpop.git --prefix bundle/autocomplpop master --squash
 # Fork that does not automatically select first item in popup menu
 # More here: https://bitbucket.org/ns9tks/vim-autocomplpop/issue/53/make-autoselection-of-the-first-item
 git subtree $ACTION https://github.com/dirkwallenstein/vim-autocomplpop --prefix bundle/autocomplpop master --squash
@@ -31,7 +29,11 @@ git subtree $ACTION https://github.com/ton/vim-bufsurf.git --prefix bundle/vim-b
 git subtree $ACTION https://github.com/gregsexton/gitv.git --prefix bundle/gitv master --squash
 git subtree $ACTION https://github.com/jgdavey/tslime.vim.git --prefix bundle/tslime master --squash
 git subtree $ACTION https://github.com/rondale-sc/vim-spacejam.git --prefix bundle/spacejam master --squash
+git subtree $ACTION https://github.com/nelstrom/vim-textobj-rubyblock.git --prefix bundle/vim-textobj-rubyblock master --squash
+git subtree $ACTION https://github.com/kana/vim-textobj-user.git --prefix bundle/vim-textobj-user master --squash
 
 # Failed plugins
+# Official autocomplpop version that automatically selects 1st item in popup menu
+#git subtree $ACTION https://github.com/othree/vim-autocomplpop.git --prefix bundle/autocomplpop master --squash
 # Is not very smooth on an ssh terminal over an RDP connection
 #git subtree $ACTION https://github.com/terryma/vim-smooth-scroll.git --prefix bundle/vim-smooth-scroll master --squash
