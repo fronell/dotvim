@@ -198,6 +198,12 @@ map <Leader>ch <C-W>h<C-W>c
 """ Close left window
 map <Leader>cl <C-W>l<C-W>c
 
+" d
+"" Diffing
+map <Leader>do :windo diffthis<CR>
+map <leader>dc :diffoff!<CR>
+map <leader>du :diffupdate<CR>
+
 " f
 map <leader>fi :setlocal foldmethod=indent<CR>
 map <leader>fs :setlocal foldmethod=syntax<CR>
@@ -213,7 +219,7 @@ map <leader>n :NERDTreeToggle<CR>
 
 " N
 "" Toggle line numbers
-map <silent> <Leader>N :setlocal number!<CR>
+map <Leader>N :setlocal number!<CR>
 
 " p
 "" ctrl-p mappings
