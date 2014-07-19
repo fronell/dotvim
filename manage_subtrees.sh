@@ -27,8 +27,11 @@ git subtree $ACTION https://github.com/dirkwallenstein/vim-autocomplpop --prefix
 git subtree $ACTION https://github.com/vim-scripts/L9.git --prefix bundle/L9 master --squash
 git subtree $ACTION https://github.com/scrooloose/nerdcommenter.git --prefix bundle/nerdcommenter master --squash
 git subtree $ACTION https://github.com/milkypostman/vim-togglelist.git --prefix bundle/togglelist master --squash
-git subtree $ACTION https://github.com/terryma/vim-smooth-scroll.git --prefix bundle/vim-smooth-scroll master --squash
 git subtree $ACTION https://github.com/ton/vim-bufsurf.git --prefix bundle/vim-bufsurf master --squash
 git subtree $ACTION https://github.com/gregsexton/gitv.git --prefix bundle/gitv master --squash
 git subtree $ACTION https://github.com/jgdavey/tslime.vim.git --prefix bundle/tslime master --squash
 git subtree $ACTION https://github.com/rondale-sc/vim-spacejam.git --prefix bundle/spacejam master --squash
+
+# Failed plugins
+# Is not very smooth on an ssh terminal over an RDP connection
+#git subtree $ACTION https://github.com/terryma/vim-smooth-scroll.git --prefix bundle/vim-smooth-scroll master --squash

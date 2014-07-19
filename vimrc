@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
+"=> General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set nocompatible    " Break vi compatbility, should be set first
+set nocompatible    "Break vi compatbility, should be set first
 
 " Enable pathogen
 call pathogen#infect()
@@ -13,7 +13,7 @@ let mapleader = ","
 
 " Leave this disabled because it prevents highlighting text to copy
 " to the clipboard in PuTTY -- csworn 2011.08.03
-"set mouse=a		    " Enable mouse usage (all modes) in terminals
+"set mouse=a		    "Enable mouse usage (all modes) in terminals
 
 " Have to place up here so the ruler displays on gVim in
 " Windows -- csworn 2011.08.03
@@ -23,14 +23,12 @@ set ruler
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-syntax enable "Enable syntax hl
+syntax enable "Enable syntax highlighting
 syntax on
 
 if has("gui_running")
   colorscheme desert
   highlight Normal guibg=black guifg=white
-  set nu
-  set cursorline
   set guioptions-=m  "remove menu bar
   set guioptions-=T  "remove toolbar
   set guioptions-=r  "remove right-hand scroll bar
@@ -39,7 +37,6 @@ else
   colorscheme solarized
   "colorscheme pablo
   set background=dark
-  set nu
 endif
 
 set encoding=utf8
@@ -54,17 +51,17 @@ set ffs=unix,dos,mac "Default file types
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set expandtab    " Use spaces instead of tabs
+set expandtab    "Use spaces instead of tabs
 set smarttab
-set shiftwidth=2 " 1 tab == 2 spaces
+set shiftwidth=2 "1 tab == 2 spaces
 set tabstop=2
 
-set lbr    " Prevents word wrap from breaking words in the middle
-set tw=500 " Sets text width
+set lbr    "Prevents word wrap from breaking words in the middle
+set tw=500 "Sets text width
 
-set si        " Smart indent
-set wrap      " Wrap lines
-set linebreak " Wrap lines at convenient points
+set si        "Smart indent
+set wrap      "Wrap lines
+set linebreak "Wrap lines at convenient points
 
 " Disable auto-comment
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -86,7 +83,7 @@ set shortmess=It
 set so=7
 
 set wildmode=longest,list,full
-set wildmenu " Turn on WiLd menu
+set wildmenu "Turn on WiLd menu
 " Ignore these files during tab completion
 " Common
 set wildignore+=.git,.hg,.svn,*.swp,*.tmp,*.zip,*.pdf
@@ -95,25 +92,32 @@ set wildignore+=.DS_Store,*.so
 " Windows
 set wildignore+=*.exe,*.dll,*.doc*,*.xls*
 
+set nu "Turn on line numbering
+
 " Set backspace config
 set backspace=eol,start,indent
 
-set ignorecase   " Ignore case when searching
+set ignorecase   "Ignore case when searching
 set smartcase
 
-set hlsearch     " Highlight search things
+set hlsearch     "Highlight search things
+set incsearch    "Make search act like search in modern browsers
 
-set incsearch    " Make search act like search in modern browsers
-set nolazyredraw " Don't redraw while executing macros
+" Recommended settings to help with Syntax plugin performance
+set lazyredraw
+set nocursorcolumn
+" nocursorline is recommended but I like it so I'll keep it here just as a
+" reminder to turn it off if vim gets slow
+set cursorline
 
-set magic        " Set magic on, for regular expressions
+set magic        "Set magic on, for regular expressions
 
-set showmatch    " Show matching bracets when text indicator is over them
-set mat=2        " How many tenths of a second to blink
+set showmatch    "Show matching bracets when text indicator is over them
+set mat=2        "How many tenths of a second to blink
 
 " Folding
-set foldmethod=syntax    " Found syntax produced better results than indent
-"set foldmethod=indent   " fold based on indent
+set foldmethod=syntax    "Found syntax produced better results than indent
+"set foldmethod=indent   "fold based on indent
 "set foldnestmax=3       "deepest fold is 3 levels
 set nofoldenable        "dont fold by default when opening files
 "set foldlevel=1
@@ -134,14 +138,14 @@ set nobackup
 
 " Reference this page for status line syntax:
 " http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html
-set laststatus=2                         " always show the status bar
-set statusline=[%n]\                     " buffer number
-set statusline+=[%{&ff}]\                " file format
-set statusline+=%F\ %m\ %r               " filename, modified, readonly
-set statusline+=%{&paste?'[paste]':''}\  " Shows if paste mode is enabld
-set statusline+=%{fugitive#statusline()} " fugitive
-set statusline+=%=%5l,%v\                " current line,current row
-set statusline+=%L[%p%%]                 " total lines[% position]
+set laststatus=2                         "always show the status bar
+set statusline=[%n]\                     "buffer number
+set statusline+=[%{&ff}]\                "file format
+set statusline+=%F\ %m\ %r               "filename, modified, readonly
+set statusline+=%{&paste?'[paste]':''}\  "Shows if paste mode is enabld
+set statusline+=%{fugitive#statusline()} "fugitive
+set statusline+=%=%5l,%v\                "current line,current row
+set statusline+=%L[%p%%]                 "total lines[% position]
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -167,6 +171,9 @@ map <C-l> <C-W>l
 
 " Cycle through autocomplete options using tab
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<C-g>u\<Tab>"
+
+" A much easier way of pressing Escape in insert mode
+inoremap kj <esc>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => LEADER MAPPINGS
@@ -285,11 +292,9 @@ let g:acp_behaviorKeywordLength = 3
 " NERDTree
 let NERDTreeWinSize = 50
 
-" vim-smooth-scroll
-noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 1)<CR>
-noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 1)<CR>
-noremap <silent> <c-b> :call smooth_scroll#up(&scroll*2, 10, 2)<CR>
-noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 2)<CR>
+" Syntax
+" Syntax highlighting can really slow things down if a large file is open
+let g:syntastic_enable_highlighting=0
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
