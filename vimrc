@@ -179,23 +179,23 @@ inoremap kj <esc>
 " => LEADER MAPPINGS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " b
-" Buffer navigation
-" Toggle between last used buffers
-" Notice how its the ^ and not 6
+"" Buffer navigation
+"" Toggle between last used buffers
+"" Notice how its the ^ and not 6
 map <Leader>bt <C-^>
 map <Leader>bb :BufSurfBack<CR>
 
 " c
-" More window mappings
-" Close current window
+"" More window mappings
+"" Close current window
 map <Leader>cc <C-W>c
-" Close top window
+""" Close top window
 map <Leader>ck <C-W>k<C-W>c
-" Close bottom window
+""" Close bottom window
 map <Leader>cj <C-W>j<C-W>c
-" Close right window
+""" Close right window
 map <Leader>ch <C-W>h<C-W>c
-" Close left window
+""" Close left window
 map <Leader>cl <C-W>l<C-W>c
 
 " f
@@ -203,46 +203,46 @@ map <leader>fi :setlocal foldmethod=indent<CR>
 map <leader>fs :setlocal foldmethod=syntax<CR>
 
 " l
-" Disable color column
-" I don't use these and <leader>l is mapped to Location List for now
-"map <silent> <Leader>l :setlocal colorcolumn=80<CR>
-"map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
+"" Disable color column
+"" I don't use these and <leader>l is mapped to Location List for now
+""map <silent> <Leader>l :setlocal colorcolumn=80<CR>
+""map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
 
 " n
 map <leader>n :NERDTreeToggle<CR>
 
 " N
-" Toggle line numbers
+"" Toggle line numbers
 map <silent> <Leader>N :setlocal number!<CR>
 
 " p
-" ctrl-p mappings
+"" ctrl-p mappings
 map <leader>pb :CtrlPBuffer<CR>
 map <leader>pm :CtrlPMRU<CR>
 map <leader>pt :CtrlPTag<CR>
-" Search Files
+"" Search Files
 map <leader>pf :CtrlP<CR>
-" Search everything
+"" Search everything
 map <leader>pp :CtrlPMixed<CR>
 
 " P
-" prevents pasted text from getting auto-indented
-" but it breaks auto indent and other features when enabled
+"" prevents pasted text from getting auto-indented
+"" but it breaks auto indent and other features when enabled
 map <Leader>P :setlocal paste!<CR>
 
 " q
-" Not needed because of toggle implemented by togglelist plugin
-"map <leader>qo :copen<CR>
-"map <leader>qc :cclose<CR>
+"" Not needed because of toggle implemented by togglelist plugin
+""map <leader>qo :copen<CR>
+""map <leader>qc :cclose<CR>
 
 " r
-" Reload vimrc
 map <leader>rr :w<CR>:!ruby %<CR>
+"" Reload vimrc
 map <leader>rv :source $MYVIMRC<CR>
 
 " s
 nnoremap <leader>ss :w<cr>
-" Save while in insert mode
+"" Save while in insert mode
 inoremap <leader>ss <C-c>:w<cr>
 
 " t
@@ -252,16 +252,16 @@ map <leader>t :TagbarToggle<CR>
 map <leader>T :TlistToggle<CR>
 
 " W
-" Toggle word wrap
+"" Toggle word wrap
 map <silent> <Leader>W :setlocal wrap!<CR>
 
 " ]
-" Quickfix list
+"" Quickfix list
 map ]q :cnext<CR>
 map ]Q :clast<CR>
 
 " [
-" Quickfix list
+"" Quickfix list
 map [q :cprev<CR>
 map [Q :cfirst<CR>
 map <Leader>bf :BufSurfForward<CR>
