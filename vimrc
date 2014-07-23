@@ -252,10 +252,16 @@ nnoremap <leader>ss :w<cr>
 inoremap <leader>ss <C-c>:w<cr>
 
 " t
-map <leader>t :TagbarToggle<CR>
+map <leader>tc :tabc<CR>
+map <leader>te :tabe<CR>
+map <leader>tf :tabf<CR>
+map <leader>tl :tabl<CR>
+map <leader>tn :tabn<CR>
+map <leader>tp :tabp<CR>
+map <leader>tt :TagbarToggle<CR>
 
 " T
-map <leader>T :TlistToggle<CR>
+map <leader>TT :TlistToggle<CR>
 
 " W
 "" Toggle word wrap
