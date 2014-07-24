@@ -156,6 +156,13 @@ set complete=.,w,b,t
 " Toggle 80th column line
 set colorcolumn=80
 
+" Keep search matches in the middle of the window.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Minimal number of screen lines to keep above and below the cursor.
+set scrolloff=5
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => MAPPINGS
