@@ -31,6 +31,7 @@ git subtree $ACTION https://github.com/rondale-sc/vim-spacejam.git --prefix bund
 git subtree $ACTION https://github.com/nelstrom/vim-textobj-rubyblock.git --prefix bundle/vim-textobj-rubyblock master --squash
 git subtree $ACTION https://github.com/kana/vim-textobj-user.git --prefix bundle/vim-textobj-user master --squash
 git subtree $ACTION https://github.com/moll/vim-bbye.git --prefix bundle/vim-bbye master --squash
+git subtree $ACTION https://github.com/mileszs/ack.vim.git --prefix bundle/ack master --squash
 
 # Failed plugins
 # Official autocomplpop version that automatically selects 1st item in popup menu
@@ -39,3 +40,6 @@ git subtree $ACTION https://github.com/moll/vim-bbye.git --prefix bundle/vim-bby
 #git subtree $ACTION https://github.com/terryma/vim-smooth-scroll.git --prefix bundle/vim-smooth-scroll master --squash
 # I prefer Tabular for aligning text
 #git subtree $ACTION https://github.com/vim-scripts/Align --prefix bundle/align master --squash
+# neocomplcache conflicts with Omnicomplete for ruby
+# Reference: https://github.com/Shougo/neocomplcache.vim/issues/417
+#git subtree $ACTION https://github.com/Shougo/neocomplcache.vim --prefix bundle/vim-smooth-scroll master --squash

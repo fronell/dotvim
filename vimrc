@@ -308,8 +308,13 @@ let NERDTreeWinSize = 50
 " Syntax highlighting can really slow things down if a large file is open
 let g:syntastic_enable_highlighting=0
 
-" vim-textobj-rubyblock
+" required for vim-textobj-rubyblock
 runtime macros/matchit.vim
+
+" Ack
+let g:ack_autofold_results = 1
+let g:ackpreview = 1
+let g:ack_autoclose = 1
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
