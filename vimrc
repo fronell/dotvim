@@ -299,7 +299,8 @@ let g:ctrlp_extensions = ['tag']
 let Tlist_Use_Right_Window = 1
 
 " AutoComplPop
-let g:acp_behaviorKeywordLength = 3
+"" Disable autocompletion of keywords in buffer
+let g:acp_behaviorKeywordLength = -1
 
 " NERDTree
 let NERDTreeWinSize = 50
