@@ -103,25 +103,18 @@ set smartcase
 set hlsearch     "Highlight search things
 set incsearch    "Make search act like search in modern browsers
 
-" Recommended settings to help with Syntax plugin performance
-set lazyredraw
-set nocursorcolumn
-" nocursorline is recommended but I like it so I'll keep it here just as a
-" reminder to turn it off if vim gets slow
-set cursorline
-
 set magic        "Set magic on, for regular expressions
 
 set showmatch    "Show matching bracets when text indicator is over them
 set mat=2        "How many tenths of a second to blink
 
 " Folding
-set foldmethod=syntax    "Found syntax produced better results than indent
-"set foldmethod=indent   "fold based on indent
-"set foldnestmax=3       "deepest fold is 3 levels
+" Found syntax produced better results than indent but performance would suck
+" when dealing large chef roles because of all the nested hashes
+"set foldmethod=syntax
+"set foldmethod=indent
+" Going to have folding as something I enable manually for now
 set nofoldenable        "dont fold by default when opening files
-"set foldlevel=1
-"set foldcolumn=1        "set the # of fold column indicators
 
 " remember lotsa fun stuff
 set viminfo='1000,f1,/50,:50,<50,n~/.viminfo
@@ -162,6 +155,32 @@ nnoremap N Nzzzv
 
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=5
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => PERFORMANCE
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set lazyredraw
+set nocursorcolumn
+
+" Vim should enable ttyfast if xterm is used by this may not happen when
+" tmux is used depending on the term used by tmux.  We'll turn it on by default
+set ttyfast
+
+" nocursorline is recommended but I like it so I'll keep it here just as a
+" reminder to turn it off if vim gets slow
+set cursorline
+
+" Possible fix if editing ruby files becomes slow
+" Reference: http://stackoverflow.com/questions/16902317/vim-slow-with-ruby-syntax-highlighting
+"set re=1
+
+" Possible fix if editing large xml files becomes slow
+"set synmaxcol=200
+
+" Possible fix for syntax highlighting slowing things down
+" Reference: http://vim.wikia.com/wiki/Fix_syntax_highlighting
+"syntax sync minlines=200
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
