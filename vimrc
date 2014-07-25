@@ -8,9 +8,6 @@ call pathogen#infect()
 
 filetype plugin indent on
 
-" Leader setings (needs to be above any other use of <Leader>)
-let mapleader = ","
-
 " Leave this disabled because it prevents highlighting text to copy
 " to the clipboard in PuTTY -- csworn 2011.08.03
 "set mouse=a		    "Enable mouse usage (all modes) in terminals
@@ -123,12 +120,6 @@ set viminfo='1000,f1,/50,:50,<50,n~/.viminfo
 " Unix -- csworn 2011.08.03
 set ruler "Always show current position
 
-" Prevent ~ swap swp backup files from getting written
-" Preferable to set updatecount=0 because you still
-" get a .swp that lets you know the file is already
-" opened
-set nobackup
-
 " Reference this page for status line syntax:
 " http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html
 set laststatus=2                         "always show the status bar
@@ -186,9 +177,6 @@ set cursorline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => MAPPINGS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Remove the Windows ^M - when the encodings gets messed up
-noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
-
 " Smart way to move btw. windows
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -204,6 +192,9 @@ inoremap kj <esc>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => LEADER MAPPINGS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Leader setings (needs to be above any other use of <Leader>)
+let mapleader = ","
+
 " b
 "" Buffer navigation
 "" Toggle between last used buffers
@@ -239,6 +230,10 @@ map <leader>fs :setlocal foldmethod=syntax<CR>
 "" I don't use these and <leader>l is mapped to Location List for now
 ""map <silent> <Leader>l :setlocal colorcolumn=80<CR>
 ""map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
+
+" m
+" Remove the Windows ^M - when the encodings gets messed up
+noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " n
 map <leader>n :NERDTreeToggle<CR>
@@ -312,6 +307,12 @@ map <Leader>bf :BufSurfForward<CR>
 " for backgrounded buffers
 set hidden
 
+" Prevent ~ swap swp backup files from getting written
+" Preferable to set updatecount=0 because you still
+" get a .swp that lets you know the file is already
+" opened
+set nobackup
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => PLUGIN SPECIFIC SETTINGS
@@ -325,8 +326,7 @@ let g:ctrlp_extensions = ['tag']
 let Tlist_Use_Right_Window = 1
 
 " AutoComplPop
-"" Disable autocompletion of keywords in buffer
-let g:acp_behaviorKeywordLength = -1
+let g:acp_behaviorKeywordLength = 3
 
 " NERDTree
 let NERDTreeWinSize = 50
@@ -342,6 +342,10 @@ runtime macros/matchit.vim
 let g:ack_autofold_results = 1
 let g:ackpreview = 1
 let g:ack_autoclose = 1
+let g:ackhighlight = 1
+
+" Ag
+let g:aghighlight=1
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
