@@ -32,7 +32,7 @@ git subtree $ACTION https://github.com/nelstrom/vim-textobj-rubyblock.git --pref
 git subtree $ACTION https://github.com/kana/vim-textobj-user.git --prefix bundle/vim-textobj-user master --squash
 git subtree $ACTION https://github.com/moll/vim-bbye.git --prefix bundle/vim-bbye master --squash
 git subtree $ACTION https://github.com/mileszs/ack.vim.git --prefix bundle/ack master --squash
-git subtree $ACTION git clone https://github.com/rking/ag.vim.git --prefix bundle/ag master --squash
+git subtree $ACTION https://github.com/rking/ag.vim.git --prefix bundle/ag master --squash
 
 # Failed plugins
 # Official autocomplpop version that automatically selects 1st item in popup menu
