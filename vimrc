@@ -63,6 +63,9 @@ set linebreak "Wrap lines at convenient points
 " Disable auto-comment
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
+" What to represent hidden characters as
+set listchars=tab:▸\ ,eol:¬
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -230,6 +233,8 @@ map <leader>fs :setlocal foldmethod=syntax<CR>
 "" I don't use these and <leader>l is mapped to Location List for now
 ""map <silent> <Leader>l :setlocal colorcolumn=80<CR>
 ""map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
+"" Toggle list hidden characters
+map <Leader>lc :set list!<CR>
 
 " m
 " Remove the Windows ^M - when the encodings gets messed up
