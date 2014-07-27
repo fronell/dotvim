@@ -26,13 +26,14 @@ git subtree $ACTION https://github.com/scrooloose/nerdcommenter.git --prefix bun
 git subtree $ACTION https://github.com/milkypostman/vim-togglelist.git --prefix bundle/togglelist master --squash
 git subtree $ACTION https://github.com/ton/vim-bufsurf.git --prefix bundle/vim-bufsurf master --squash
 git subtree $ACTION https://github.com/gregsexton/gitv.git --prefix bundle/gitv master --squash
-git subtree $ACTION https://github.com/jgdavey/tslime.vim.git --prefix bundle/tslime master --squash
 git subtree $ACTION https://github.com/rondale-sc/vim-spacejam.git --prefix bundle/spacejam master --squash
 git subtree $ACTION https://github.com/nelstrom/vim-textobj-rubyblock.git --prefix bundle/vim-textobj-rubyblock master --squash
 git subtree $ACTION https://github.com/kana/vim-textobj-user.git --prefix bundle/vim-textobj-user master --squash
 git subtree $ACTION https://github.com/moll/vim-bbye.git --prefix bundle/vim-bbye master --squash
 git subtree $ACTION https://github.com/mileszs/ack.vim.git --prefix bundle/ack master --squash
 git subtree $ACTION https://github.com/rking/ag.vim.git --prefix bundle/ag master --squash
+git subtree $ACTION https://github.com/christoomey/vim-tmux-navigator.git --prefix bundle/tmux-navigator --squash
+git subtree $ACTION https://github.com/benmills/vimux.git --prefix bundle/vimux --squash
 
 # Failed plugins
 # Official autocomplpop version that automatically selects 1st item in popup menu
@@ -44,3 +45,5 @@ git subtree $ACTION https://github.com/rking/ag.vim.git --prefix bundle/ag maste
 # neocomplcache conflicts with Omnicomplete for ruby
 # Reference: https://github.com/Shougo/neocomplcache.vim/issues/417
 #git subtree $ACTION https://github.com/Shougo/neocomplcache.vim --prefix bundle/vim-smooth-scroll master --squash
+# I have never used this plugin since I installed it
+#git subtree $ACTION https://github.com/jgdavey/tslime.vim.git --prefix bundle/tslime master --squash

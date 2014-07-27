@@ -16,6 +16,9 @@ filetype plugin indent on
 " Windows -- csworn 2011.08.03
 set ruler
 
+" Use the system clipboard by default (does not work in tmux!)
+"set clipboard=unnamed,unnamedplus
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
