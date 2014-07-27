@@ -16,7 +16,7 @@ filetype plugin indent on
 " Windows -- csworn 2011.08.03
 set ruler
 
-" Use the system clipboard by default (does not work in tmux!)
+" Use the system clipboard by default (does not work on vim inside tmux!)
 "set clipboard=unnamed,unnamedplus
 
 
