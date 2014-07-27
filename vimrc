@@ -292,6 +292,16 @@ map <leader>tt :TagbarToggle<CR>
 " T
 map <leader>TT :TlistToggle<CR>
 
+" v
+"" Vimux mappings
+map <Leader>vr :call VimuxRunCommand("clear; ls -l " . bufname("%"))<CR>
+map <Leader>vp :VimuxPromptCommand<CR>
+map <Leader>vl :VimuxRunLastCommand<CR>
+map <Leader>vi :VimuxInspectRunner<CR>
+map <Leader>vq :VimuxCloseRunner<CR>
+map <Leader>vx :VimuxInterruptRunner<CR>
+map <Leader>vz :call VimuxZoomRunner()<CR>
+
 " W
 "" Toggle word wrap
 map <silent> <Leader>W :setlocal wrap!<CR>
