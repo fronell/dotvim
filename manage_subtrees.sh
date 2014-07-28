@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# add or pull
+# add: Set this for adding new repo's
+# pull: Set this to update with changes from repo's
 ACTION=$1
 
 git subtree $ACTION https://github.com/kien/ctrlp.vim.git --prefix bundle/ctrlp master --squash
@@ -32,9 +33,11 @@ git subtree $ACTION https://github.com/kana/vim-textobj-user.git --prefix bundle
 git subtree $ACTION https://github.com/moll/vim-bbye.git --prefix bundle/vim-bbye master --squash
 git subtree $ACTION https://github.com/mileszs/ack.vim.git --prefix bundle/ack master --squash
 git subtree $ACTION https://github.com/rking/ag.vim.git --prefix bundle/ag master --squash
+# Tmux-Navigator: Use vim key bindings to navigate vim windows and tmux windows
 git subtree $ACTION https://github.com/christoomey/vim-tmux-navigator.git --prefix bundle/tmux-navigator master --squash
 git subtree $ACTION https://github.com/benmills/vimux.git --prefix bundle/vimux master --squash
-# The Conque on github is out of date, use the Google Code page
+# Conque: Use a shell within vim, super sweet!
+## The Conque on github is out of date, use the Google Code page
 #mkdir bundle/conque; cd bundle/conque; curl https://conque.googlecode.com/files/conque_2.3.tar.gz | tar xzv --strip-components=1
 
 # Failed plugins
