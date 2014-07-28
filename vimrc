@@ -1,6 +1,6 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "=> General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible    "Break vi compatbility, should be set first
 
 " Enable pathogen
@@ -100,12 +100,11 @@ set nu "Turn on line numbering
 " Set backspace config
 set backspace=eol,start,indent
 
-set ignorecase   "Ignore case when searching
-set smartcase
-
+" Searching
 set hlsearch     "Highlight search things
 set incsearch    "Make search act like search in modern browsers
-
+set ignorecase   "Ignore case when searching
+set smartcase    "Overrides ignore case if search pattern has upper case chars
 set magic        "Set magic on, for regular expressions
 
 set showmatch    "Show matching bracets when text indicator is over them
@@ -122,10 +121,27 @@ set nofoldenable        "dont fold by default when opening files
 " remember lotsa fun stuff
 set viminfo='1000,f1,/50,:50,<50,n~/.viminfo
 
-" Have to place down here so the ruler displays on
-" Unix -- csworn 2011.08.03
-set ruler "Always show current position
+" Same as default except that I remove the 'u' option
+set complete=.,w,b,t
 
+" Toggle 80th column line
+set colorcolumn=80
+
+" Keep search matches in the middle of the window.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Minimal number of screen lines to keep above and below the cursor.
+set scrolloff=5
+
+" How splits should open by default
+set splitbelow
+set splitright
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => STATUS LINE
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Reference this page for status line syntax:
 " http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html
 set laststatus=2                         "always show the status bar
@@ -139,19 +155,6 @@ set statusline+=%L[%p%%]                 "total lines[% position]
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-
-" Same as default except that I remove the 'u' option
-set complete=.,w,b,t
-
-" Toggle 80th column line
-set colorcolumn=80
-
-" Keep search matches in the middle of the window.
-nnoremap n nzzzv
-nnoremap N Nzzzv
-
-" Minimal number of screen lines to keep above and below the cursor.
-set scrolloff=5
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -209,9 +212,9 @@ map <Leader>bt <C-^>
 map <Leader>bb :BufSurfBack<CR>
 
 " c
-"" More window mappings
-"" Close current window
-map <Leader>cc <C-W>c
+"" Window mappings
+""" Close current window
+map <Leader>cq <C-W>c
 """ Close top window
 map <Leader>ck <C-W>k<C-W>c
 """ Close bottom window
@@ -220,6 +223,11 @@ map <Leader>cj <C-W>j<C-W>c
 map <Leader>ch <C-W>h<C-W>c
 """ Close left window
 map <Leader>cl <C-W>l<C-W>c
+"" Conque
+""" Open conque in a new split running bash in normal mode
+map <Leader>ct :ConqueTermSplit bash<CR><C-e>
+""" Reopen conque buffer in a split in normal mode
+map <Leader>cv :sp <BAR> b bash<CR><C-e>
 
 " d
 "" Diffing
@@ -364,6 +372,12 @@ let g:ackhighlight = 1
 
 " Ag
 let g:aghighlight=1
+
+" Conque
+"" Does not work, pass <C-e> in mappings as a workaround to open in normal mode
+let g:ConqueTerm_InsertOnEnter = 0
+let g:ConqueTerm_FastMode = 1
+let g:ConqueTerm_EscKey = '<C-e>'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

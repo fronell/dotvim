@@ -34,6 +34,8 @@ git subtree $ACTION https://github.com/mileszs/ack.vim.git --prefix bundle/ack m
 git subtree $ACTION https://github.com/rking/ag.vim.git --prefix bundle/ag master --squash
 git subtree $ACTION https://github.com/christoomey/vim-tmux-navigator.git --prefix bundle/tmux-navigator master --squash
 git subtree $ACTION https://github.com/benmills/vimux.git --prefix bundle/vimux master --squash
+# The Conque on github is out of date, use the Google Code page
+#mkdir bundle/conque; cd bundle/conque; curl https://conque.googlecode.com/files/conque_2.3.tar.gz | tar xzv --strip-components=1
 
 # Failed plugins
 # Official autocomplpop version that automatically selects 1st item in popup menu
