@@ -343,32 +343,14 @@ set nobackup
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => PLUGIN SPECIFIC SETTINGS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" CtrlP
-"" Enable tag mode in CtrlP
-let g:ctrlp_extensions = ['tag']
-
-" Taglist
-"" Place taglist on the right side
-let Tlist_Use_Right_Window = 1
-
-" AutoComplPop
-let g:acp_behaviorKeywordLength = 3
-
-" NERDTree
-let NERDTreeWinSize = 50
-
-" Syntax
-" Syntax highlighting can really slow things down if a large file is open
-let g:syntastic_enable_highlighting=0
-
-" required for vim-textobj-rubyblock
-runtime macros/matchit.vim
-
 " Ack
 let g:ack_autofold_results = 1
 let g:ackpreview = 1
 let g:ack_autoclose = 1
 let g:ackhighlight = 1
+
+" AutoComplPop
+let g:acp_behaviorKeywordLength = 3
 
 " Ag
 let g:aghighlight=1
@@ -378,6 +360,28 @@ let g:aghighlight=1
 let g:ConqueTerm_InsertOnEnter = 0
 let g:ConqueTerm_FastMode = 1
 let g:ConqueTerm_EscKey = '<C-e>'
+
+" CtrlP
+"" Enable tag mode in CtrlP
+let g:ctrlp_extensions = ['tag']
+
+" NERDTree
+let NERDTreeWinSize = 50
+
+" Syntax
+" Syntax highlighting can really slow things down if a large file is open
+let g:syntastic_enable_highlighting=0
+
+" Taglist
+"" Place taglist on the right side
+let Tlist_Use_Right_Window = 1
+
+" vim-ruby
+let g:ruby_indent_access_modifier_style = 'outdent'
+
+" vim-textobj-rubyblock
+"" required dependency
+runtime macros/matchit.vim
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
