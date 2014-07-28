@@ -12,6 +12,9 @@ git subtree $ACTION https://github.com/scrooloose/nerdtree --prefix bundle/nerdt
 git subtree $ACTION https://github.com/scrooloose/syntastic.git --prefix bundle/syntastic master --squash
 # Tagbar: Displays tags ordered by scope
 git subtree $ACTION https://github.com/majutsushi/tagbar.git --prefix bundle/tagbar master --squash
+# Tablist: Displays tags ordered by position in file
+## The Tablist on github is out of date, use vim.sourceforge.net instead
+#mkdir bundle/taglist; cd bundle/taglist; curl http://vim.sourceforge.net/scripts/download_script.php?src_id=19574 | tar xzv
 # Commentary: Makes commenting fun! (Inserts a space after comment)
 git subtree $ACTION https://github.com/tpope/vim-commentary.git --prefix bundle/vim-commentary master --squash
 # NERD Commenter: Makes commenting fun! (No space after comment)
