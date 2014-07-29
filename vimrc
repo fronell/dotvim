@@ -144,16 +144,18 @@ set splitright
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Reference this page for status line syntax:
 " http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html
-set laststatus=2                         "always show the status bar
-set statusline=[%n]\                     "buffer number
-set statusline+=[%{&ff}]\                "file format
-set statusline+=%F\ %m\ %r               "filename, modified, readonly
-set statusline+=%{&paste?'[paste]':''}\  "Shows if paste mode is enabld
-set statusline+=%{fugitive#statusline()} "fugitive
-set statusline+=%=%5l,%v\                "current line,current row
-set statusline+=%L[%p%%]                 "total lines[% position]
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+set laststatus=2                             " always show the status bar
+set statusline=[%n]\                         " buffer number
+set statusline+=[%{&ff}]\                    " file format
+set statusline+=%F\ %m\ %r                   " filename, modified, readonly
+set statusline+=%{&paste?'[paste]':''}\      " Shows if paste mode is enabld
+set statusline+=%{fugitive#statusline()}     " fugitive
+set statusline+=%=                           " Right/left seperator
+set statusline+=[%{getcwd()}]                " Current working directory
+set statusline+=%5l,%v\                      " current line, current row
+set statusline+=%L[%p%%]                     " total lines[% position]
+set statusline+=%#warningmsg#                " Recommended for Syntastic
+set statusline+=%{SyntasticStatuslineFlag()} " Recommended for Syntastic
 set statusline+=%*
 
 
@@ -197,6 +199,7 @@ inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<C-g>u\<Tab>"
 
 " A much easier way of pressing Escape in insert mode
 inoremap kj <esc>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => LEADER MAPPINGS
@@ -246,6 +249,7 @@ map <leader>fs :setlocal foldmethod=syntax<CR>
 ""map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
 "" Toggle list hidden characters
 map <Leader>lc :set list!<CR>
+nmap <script> <silent> <leader>ll :call ToggleLocationList()<CR>
 
 " m
 " Remove the Windows ^M - when the encodings gets messed up
@@ -277,6 +281,7 @@ map <Leader>P :setlocal paste!<CR>
 "" Not needed because of toggle implemented by togglelist plugin
 ""map <leader>qo :copen<CR>
 ""map <leader>qc :cclose<CR>
+nmap <script> <silent> <leader>qq :call ToggleQuickfixList()<CR>
 
 " r
 map <leader>rr :w<CR>:!ruby %<CR>
@@ -368,9 +373,10 @@ let g:ctrlp_extensions = ['tag']
 " NERDTree
 let NERDTreeWinSize = 50
 
-" Syntax
+" Syntastic
 " Syntax highlighting can really slow things down if a large file is open
-let g:syntastic_enable_highlighting=0
+" Going to leave it enabled for now until I experience slow down issues
+"let g:syntastic_enable_highlighting=0
 
 " Taglist
 "" Place taglist on the right side
