@@ -150,10 +150,11 @@ set statusline+=[%{&ff}]\                    " file format
 set statusline+=%F\ %m\ %r                   " filename, modified, readonly
 set statusline+=%{&paste?'[paste]':''}\      " Shows if paste mode is enabld
 set statusline+=%{fugitive#statusline()}     " fugitive
-set statusline+=%=                           " Right/left seperator
-set statusline+=[%{getcwd()}]                " Current working directory
-set statusline+=%5l,%v\                      " current line, current row
-set statusline+=%L[%p%%]                     " total lines[% position]
+set statusline+=%=                           " Left/right seperator
+set statusline+=CWD:%{getcwd()}              " Current working directory
+set statusline+=%3(\ %)                      " Add 3 spaces
+set statusline+=[%l,%v]\                     " current line, current row
+set statusline+=[%p%%,%L]                    " % position, total lines
 set statusline+=%#warningmsg#                " Recommended for Syntastic
 set statusline+=%{SyntasticStatuslineFlag()} " Recommended for Syntastic
 set statusline+=%*
@@ -209,10 +210,12 @@ let mapleader = ","
 
 " b
 "" Buffer navigation
-"" Toggle between last used buffers
-"" Notice how its the ^ and not 6
+""" Toggle between last used buffers
+"""" Notice how its the ^ and not 6
 map <Leader>bt <C-^>
-map <Leader>bb :BufSurfBack<CR>
+""" Buffer Surfer
+nmap <Leader>bb :BufSurfBack<CR>
+nmap <Leader>bf :BufSurfForward<CR>
 
 " c
 "" Window mappings
@@ -245,11 +248,11 @@ map <leader>fs :setlocal foldmethod=syntax<CR>
 " l
 "" Disable color column
 "" I don't use these and <leader>l is mapped to Location List for now
-""map <silent> <Leader>l :setlocal colorcolumn=80<CR>
-""map <silent> <Leader>ll :setlocal colorcolumn=0<CR>
+""map <Leader>l :setlocal colorcolumn=80<CR>
+""map <Leader>ll :setlocal colorcolumn=0<CR>
 "" Toggle list hidden characters
 map <Leader>lc :set list!<CR>
-nmap <script> <silent> <leader>ll :call ToggleLocationList()<CR>
+nmap <script> <leader>ll :call ToggleLocationList()<CR>
 
 " m
 " Remove the Windows ^M - when the encodings gets messed up
@@ -281,7 +284,7 @@ map <Leader>P :setlocal paste!<CR>
 "" Not needed because of toggle implemented by togglelist plugin
 ""map <leader>qo :copen<CR>
 ""map <leader>qc :cclose<CR>
-nmap <script> <silent> <leader>qq :call ToggleQuickfixList()<CR>
+nmap <script> <leader>qq :call ToggleQuickfixList()<CR>
 
 " r
 map <leader>rr :w<CR>:!ruby %<CR>
@@ -317,7 +320,7 @@ map <Leader>vz :call VimuxZoomRunner()<CR>
 
 " W
 "" Toggle word wrap
-map <silent> <Leader>W :setlocal wrap!<CR>
+map <Leader>W :setlocal wrap!<CR>
 
 " ]
 "" Quickfix list
