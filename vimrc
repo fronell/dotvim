@@ -67,7 +67,11 @@ set linebreak "Wrap lines at convenient points
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " What to represent hidden characters as
-set listchars=tab:▸\ ,eol:¬
+set listchars=tab:▸\ ,eol:¬,trail:•
+" Word wrap off, identifies when text beyond last column or precedes 1st column
+set listchars+=extends:»,precedes:«
+" Shows ↪ at the beginning of wrapped lines
+set showbreak=↪
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -85,14 +89,19 @@ set shortmess=It
 " Set 7 lines to the curors - when moving vertical..
 set so=7
 
+" Better Completion
+set complete=.,w,b,u,t
+set completeopt=longest,menuone,preview
+
+" Wild menu
+set wildmenu
 set wildmode=longest,list,full
-set wildmenu "Turn on WiLd menu
-" Ignore these files during tab completion
-" Common
-set wildignore+=.git,.hg,.svn,*.swp,*.tmp,*.zip,*.pdf
-" OSX/Linux
+"" Ignore these files during tab completion
+""" Common
+set wildignore+=.git,.hg,.svn,*.sw?,*.tmp,*.zip,*.pdf
+""" OSX/Linux
 set wildignore+=.DS_Store,*.so
-" Windows
+""" Windows
 set wildignore+=*.exe,*.dll,*.doc*,*.xls*
 
 set nu "Turn on line numbering
@@ -121,11 +130,8 @@ set nofoldenable        "dont fold by default when opening files
 " remember lotsa fun stuff
 set viminfo='1000,f1,/50,:50,<50,n~/.viminfo
 
-" Same as default except that I remove the 'u' option
-set complete=.,w,b,t
-
-" Toggle 80th column line
-set colorcolumn=80
+" Show the demarcation line that we dare not cross or even go into!
+set colorcolumn=81
 
 " Keep search matches in the middle of the window.
 nnoremap n nzzzv
@@ -189,6 +195,14 @@ set cursorline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => MAPPINGS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Don't move on *
+nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
+
+" More convenient way to move to beginning or end of line
+noremap H ^
+noremap L $
+vnoremap L g_
+
 " Smart way to move btw. windows
 map <C-j> <C-W>j
 map <C-k> <C-W>k
@@ -207,6 +221,14 @@ inoremap kj <esc>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader setings (needs to be above any other use of <Leader>)
 let mapleader = ","
+
+" <tab>
+"" Use tab to jump between enclosures
+map <tab> %
+
+" <space>
+"" Clear highlighted searches
+noremap <leader><space> :noh<cr>:call clearmatches()<cr>
 
 " b
 "" Buffer navigation
