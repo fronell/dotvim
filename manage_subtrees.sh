@@ -5,7 +5,7 @@
 ACTION=$1
 
 # Ctrl-P: Fuzzy finder for files/tags/buffers
-git subtree $ACTION https://github.com/kien/ctrlp.vim.git --prefix bundle/ctrlp master --squash
+git subtree $ACTION https://github.com/ctrlpvim/ctrlp.vim --prefix bundle/ctrlp master --squash
 # NERD Tree: File browser
 git subtree $ACTION https://github.com/scrooloose/nerdtree --prefix bundle/nerdtree master --squash
 # Syntastic: Syntax checker 
