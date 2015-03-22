@@ -15,7 +15,7 @@ The steps below blow away your existing vim configuration so be careful!
 
 The steps below blow away your existing vim configuration so be careful!
 
-Its a two-step process with Windows because you cannot create symlinks as a regular user.  Instead, we have to determine our user profile directory and then open up a command prompt with Admin privileges to create the command prompt.
+Its a two-step process with Windows because you cannot create symlinks as a regular user.  Instead, we have to determine our user profile directory and then open up a command prompt with Admin privileges to create the symlink.
 
 Open a command prompt as a regular user and do the following:
 
