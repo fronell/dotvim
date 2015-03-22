@@ -10,7 +10,7 @@
 
 ## Windows
 
-Install git and run windows_setup.bat.  If you want to do the install manually, here are the steps:
+The steps below will blow away any existing VIM configuration.  Install git and perform the following steps from an Administrator command prompt:
 
     cd %UserProfile%
     rmdir vimfiles /S /Q
