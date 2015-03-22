@@ -68,10 +68,12 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " What to represent hidden characters as
 set listchars=tab:▸\ ,eol:¬,trail:•
+" Characters below don't show properly on Windows and I'm undecided on their
+" usefulness
 " Word wrap off, identifies when text beyond last column or precedes 1st column
-set listchars+=extends:»,precedes:«
+"set listchars+=extends:»,precedes:«
 " Shows ↪ at the beginning of wrapped lines
-set showbreak=↪
+"set showbreak=↪
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
