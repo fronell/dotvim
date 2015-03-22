@@ -63,16 +63,16 @@ git subtree $ACTION https://github.com/nelstrom/vim-textobj-rubyblock.git --pref
 git subtree $ACTION https://github.com/kana/vim-textobj-user.git --prefix bundle/vim-textobj-user master --squash
 
 # Chopping Block plugins
-## Easy Tags: Creates tags on the fly when a file is saved in the active buffer
-### Haven't used this yet
-git subtree $ACTION https://github.com/xolox/vim-easytags --prefix bundle/vim-easytags master --squash
-## Misc: Dependency for vim-easytags
-git subtree $ACTION https://github.com/xolox/vim-misc --prefix bundle/vim-misc master --squash
-## Buffer Surfer: Allows navigation throw buffer history like a browser
-### Haven't used this yet
-git subtree $ACTION https://github.com/ton/vim-bufsurf.git --prefix bundle/vim-bufsurf master --squash
 
 # Heads Have Rolled Plugins
+## Easy Tags: Creates tags on the fly when a file is saved in the active buffer
+### Haven't used this yet
+#git subtree $ACTION https://github.com/xolox/vim-easytags --prefix bundle/vim-easytags master --squash
+## Misc: Dependency for vim-easytags
+#git subtree $ACTION https://github.com/xolox/vim-misc --prefix bundle/vim-misc master --squash
+## Buffer Surfer: Allows navigation throw buffer history like a browser
+### Haven't used this yet
+#git subtree $ACTION https://github.com/ton/vim-bufsurf.git --prefix bundle/vim-bufsurf master --squash
 # Official autocomplpop version that automatically selects 1st item in popup menu
 #git subtree $ACTION https://github.com/othree/vim-autocomplpop.git --prefix bundle/autocomplpop master --squash
 # Is not very smooth on an ssh terminal over an RDP connection
