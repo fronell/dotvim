@@ -27,23 +27,13 @@ syntax enable "Enable syntax highlighting
 syntax on
 
 if has("gui_running")
-  colorscheme desert
-  highlight Normal guibg=black guifg=white
+  colorscheme gotham
   set guioptions-=m  "remove menu bar
   set guioptions-=T  "remove toolbar
   set guioptions-=r  "remove right-hand scroll bar
   set guioptions-=l  "remove left-hand scroll bar
 else
-  "colorscheme solarized
-  "colorscheme Tomorrow-Night
-  "colorscheme Tomorrow-Night-Eighties
-  "colorscheme Tomorrow-Night-Bright
-  "colorscheme Tomorrow-Night-Blue
-  "colorscheme hemisu
-  "colorscheme gotham256
   colorscheme gotham
-  "colorscheme pablo
-  "set background=dark " I don't think this is needed anymore
 endif
 
 set encoding=utf8
