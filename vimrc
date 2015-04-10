@@ -103,9 +103,7 @@ set wildignore+=.DS_Store,*.so
 """ Windows
 set wildignore+=*.exe,*.dll,*.doc*,*.xls*
 
-" Both of these turned on enables hybrid line number
 set nu  "Turn on line numbering
-set rnu "Turn on relative line numbering
 
 " Set backspace config
 set backspace=eol,start,indent
@@ -194,7 +192,7 @@ set cursorline
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => MAPPINGS
+" => COMMAND MODE MAPPINGS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Don't move on *
 nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
@@ -210,11 +208,21 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => COMMAND MODE MAPPINGS
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Cycle through autocomplete options using tab
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<C-g>u\<Tab>"
 
 " A much easier way of pressing Escape in insert mode
 inoremap kj <esc>
+
+" Save and remain in insert mode
+inoremap <F2> <C-o>:w<cr>
+
+" Save and exit insert mode
+inoremap <F3> <esc>:w<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
