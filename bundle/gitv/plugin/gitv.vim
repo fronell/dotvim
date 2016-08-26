@@ -51,7 +51,7 @@ let g:Gitv_InstanceCounter = 0
 let s:localUncommitedMsg = 'Local uncommitted changes, not checked in to index.'
 let s:localCommitedMsg   = 'Local changes checked in to index but not committed.'
 
-command! -nargs=* -range -bang Gitv call s:OpenGitv(shellescape(<q-args>), <bang>0, <line1>, <line2>)
+command! -nargs=* -range -bang -complete=custom,s:CompleteGitv Gitv call s:OpenGitv(shellescape(<q-args>), <bang>0, <line1>, <line2>)
 cabbrev gitv <c-r>=(getcmdtype()==':' && getcmdpos()==1 ? 'Gitv' : 'gitv')<CR>
 
 "Public API:"{{{
@@ -159,17 +159,19 @@ fu! s:RunCommandRelativeToGitRepo(command) abort "{{{
 endfu "}}} }}}
 "Open And Update Gitv:"{{{
 fu! s:OpenGitv(extraArgs, fileMode, rangeStart, rangeEnd) "{{{
-    let sanatizedArgs = a:extraArgs   == "''" ? '' : a:extraArgs
-    let sanatizedArgs = sanatizedArgs == '""' ? '' : sanatizedArgs
+    let sanitizedArgs = a:extraArgs
+    if sanitizedArgs[0] =~ "[\"']" && sanitizedArgs[:-1] =~ "[\"']"
+        let sanitizedArgs = sanitizedArgs[1:-2]
+    endif
     let g:Gitv_InstanceCounter += 1
     if !s:IsCompatible() "this outputs specific errors
         return
     endif
     try
         if a:fileMode
-            call s:OpenFileMode(sanatizedArgs, a:rangeStart, a:rangeEnd)
+            call s:OpenFileMode(sanitizedArgs, a:rangeStart, a:rangeEnd)
         else
-            call s:OpenBrowserMode(sanatizedArgs)
+            call s:OpenBrowserMode(sanitizedArgs)
         endif
     catch /not a git repository/
         echom 'Not a git repository.'
@@ -182,6 +184,29 @@ fu! s:IsCompatible() "{{{
     endif
     return exists('g:loaded_fugitive')
 endfu "}}}
+fu! s:CompleteGitv(arglead, cmdline, pos) "{{{
+    if match( a:arglead, '^-' ) >= 0
+        return  "\n--after\n--all-match\n--ancestry-path\n--author-date-order"
+                \ . "\n--author=\n--author=\n--before=\n--bisect\n--boundary"
+                \ . "\n--branches\n--cherry-mark\n--cherry-pick\n--committer="
+                \ . "\n--date-order\n--dense\n--exclude=\n--first-parent"
+                \ . "\n--fixed-strings\n--follow\n--glob\n--grep-reflog"
+                \ . "\n--grep=\n--max-age=\n--max-count=\n--merges\n--min-age="
+                \ . "\n--min-parents=\n--not\n--pickaxe-all\n--pickaxe-regex"
+                \ . "\n--regexp-ignore-case\n--remotes\n--remove-empty\n--since="
+                \ . "\n--skip\n--tags\n--topo-order\n--until=\n--use-mailmap"
+    else
+        let refs = fugitive#buffer().repo().git_chomp('rev-parse', '--symbolic', '--branches', '--tags', '--remotes')
+        let refs .= "\nHEAD\nFETCH_HEAD\nORIG_HEAD"
+
+        " Complete ref names preceded by a ^ or anything followed by 2-3 dots
+        let prefix = matchstr( a:arglead, '\v^(\^|.*\.\.\.?)' )
+        if prefix == ''
+            return refs
+        else
+            return substitute( refs, "\\v(^|\n)\\zs", prefix, 'g' )
+        endif
+endf "}}}
 fu! s:OpenBrowserMode(extraArgs) "{{{
     "this throws an exception if not a git repo which is caught immediately
     let fubuffer = fugitive#buffer()
@@ -246,9 +271,10 @@ fu! s:ToggleArg(args, toggle) "{{{
 endf "}}}
 fu! s:ConstructAndExecuteCmd(direction, commitCount, extraArgs, filePath, range) "{{{
     if a:range == [] "no range, setup and execute the command
-        let cmd  = "log " . a:extraArgs
+        let cmd  = "log " 
         let cmd .= " --no-color --decorate=full --pretty=format:\"%d %s__SEP__%ar__SEP__%an__SEP__[%h]\" --graph -"
         let cmd .= a:commitCount
+        let cmd .= " " . a:extraArgs
         if a:filePath != ''
             let cmd .= ' -- ' . a:filePath
         endif
@@ -304,7 +330,7 @@ fu! s:GetFileSlices(range, filePath, commitCount, extraArgs) "{{{
     let range     = substitute(range, "'", "'\\\\''", 'g') "force unix style escaping even on windows
     let git       = fugitive#buffer().repo().git_command()
     let sliceCmd  = "for hash in `".git." log " . a:extraArgs
-    let sliceCmd .= " --no-color --pretty=format:%H -".a:commitCount."-- " . a:filePath . '`; '
+    let sliceCmd .= " --no-color --pretty=format:%H -".a:commitCount." -- " . a:filePath . '`; '
     let sliceCmd .= "do "
     let sliceCmd .= 'echo "****${hash}"; '
     let sliceCmd .= git." --no-pager blame -s -L '" . range . "' ${hash} " . a:filePath . "; "
@@ -400,14 +426,14 @@ fu! s:AddLocalNodes(filePath) "{{{
     let headLine = search('^\(\(|\|\/\|\\\|\*\)\s\?\)*\s*([^)]*HEAD', 'cnw')
     let headLine = headLine == 0 ? 1 : headLine
     if result != ""
-	let line = s:AlignWithRefs(headLine, s:localUncommitedMsg)
+        let line = s:AlignWithRefs(headLine, s:localUncommitedMsg)
         call append(headLine-1, substitute(line, '*', '=', ''))
         let headLine += 1
     endif
     let gitCmd = "diff --no-color --cached" . suffix
     let [result, cmd] = s:RunGitCommand(gitCmd, 0)
     if result != ""
-	let line = s:AlignWithRefs(headLine, s:localCommitedMsg)
+        let line = s:AlignWithRefs(headLine, s:localCommitedMsg)
         call append(headLine-1, substitute(line, '*', '+', ''))
     endif
 endfu
@@ -415,12 +441,12 @@ fu! s:AlignWithRefs(targetLine, targetStr)
     "returns the targetStr prefixed with enough whitespace to align with
     "the first asterisk on targetLine
     if a:targetLine == 0
-	return '*  '.a:targetStr
+        return '*  '.a:targetStr
     endif
     let line = getline(a:targetLine)
     let idx = stridx(line, '(')
     if idx == -1
-	return '*  '.a:targetStr
+        return '*  '.a:targetStr
     endif
     return strpart(line, 0, idx) . a:targetStr
 endfu "}}}
@@ -444,15 +470,22 @@ fu! s:SetupMappings() "{{{
     nnoremap <buffer> <silent> o :call <SID>OpenGitvCommit("Gsplit", 0)<cr>
     nnoremap <buffer> <silent> O :call <SID>OpenGitvCommit("Gtabedit", 0)<cr>
     nnoremap <buffer> <silent> s :call <SID>OpenGitvCommit("Gvsplit", 0)<cr>
+
+    nnoremap <buffer> <silent> <Plug>(gitv-previous-commit) :<C-U>call <SID>JumpToCommit(0)<cr>
+    nnoremap <buffer> <silent> <Plug>(gitv-next-commit) :<C-U>call <SID>JumpToCommit(1)<cr>
+    "fuzzyfinder style key mappings
+    nnoremap <buffer> <silent> <Plug>(gitv-split) :call <SID>OpenGitvCommit("Gsplit", 0)<cr>
+    nnoremap <buffer> <silent> <Plug>(gitv-vsplit) :call <SID>OpenGitvCommit("Gvsplit", 0)<cr>
+    nnoremap <buffer> <silent> <Plug>(gitv-tabedit) :call <SID>OpenGitvCommit("Gtabedit", 0)<cr>
+    "force opening the fugitive buffer for the commit
+    nnoremap <buffer> <silent> <Plug>(gitv-edit) :call <SID>OpenGitvCommit("Gedit", 1)<cr>
     if(!exists("g:Gitv_DoNotMapCtrlKey"))
-        nnoremap <buffer> <silent> <C-n> :<C-U>call <SID>JumpToCommit(0)<cr>
-        nnoremap <buffer> <silent> <C-p> :<C-U>call <SID>JumpToCommit(1)<cr>
-        "fuzzyfinder style key mappings
-        nnoremap <buffer> <silent> <c-j> :call <SID>OpenGitvCommit("Gsplit", 0)<cr>
-        nnoremap <buffer> <silent> <c-k> :call <SID>OpenGitvCommit("Gvsplit", 0)<cr>
-        nnoremap <buffer> <silent> <c-l> :call <SID>OpenGitvCommit("Gtabedit", 0)<cr>
-        "force opening the fugitive buffer for the commit
-        nnoremap <buffer> <silent> <c-cr> :call <SID>OpenGitvCommit("Gedit", 1)<cr>
+        nmap <buffer> <silent> <C-n> <Plug>(gitv-previous-commit)
+        nmap <buffer> <silent> <C-p> <Plug>(gitv-next-commit)
+        nmap <buffer> <silent> <c-j> <Plug>(gitv-split)
+        nmap <buffer> <silent> <c-k> <Plug>(gitv-vsplit)
+        nmap <buffer> <silent> <c-l> <Plug>(gitv-tabedit)
+        nmap <buffer> <silent> <c-cr> <Plug>(gitv-edit)
     endif
     "for the terminal
     nnoremap <buffer> <silent> i :call <SID>OpenGitvCommit("Gedit", 1)<cr>
@@ -470,6 +503,17 @@ fu! s:SetupMappings() "{{{
 
     vnoremap <buffer> <silent> m :call <SID>MergeBranches()<cr>
     nnoremap <buffer> <silent> <leader>m :call <SID>MergeToCurrent()<cr>
+
+    nmap <buffer> <silent> cp :call <SID>CherryPick()<cr>
+    vmap <buffer> <silent> cp :call <SID>CherryPick()<cr>
+
+    nmap <buffer> <silent> rb :call <SID>ResetBranch('--mixed')<cr>
+    vmap <buffer> <silent> rb :call <SID>ResetBranch('--mixed')<cr>
+    nmap <buffer> <silent> rbh :call <SID>ResetBranch('--hard')<cr>
+    vmap <buffer> <silent> rbh :call <SID>ResetBranch('--hard')<cr>
+
+    nmap <buffer> <silent> d :call <SID>DeleteRef()<cr>
+    vmap <buffer> <silent> d :call <SID>DeleteRef()<cr>
 
     "movement
     nnoremap <buffer> <silent> x :call <SID>JumpToBranch(0)<cr>
@@ -977,6 +1021,50 @@ fu! s:MergeToCurrent()
 
     call s:PerformMerge("HEAD", target, ff)
 endfu "}}}
+fu! s:CherryPick() range "{{{
+    let refs2 = s:GetGitvSha(a:firstline)
+    let refs1 = s:GetGitvSha(a:lastline)
+    if refs1 == refs2
+        let refs = refs1
+    else
+        let refs = refs1 . "^.." . refs2
+    endif
+
+    echom "Cherry-Pick " . refs
+    exec 'Git cherry-pick ' . refs
+endfu "}}}
+fu! s:ResetBranch(mode) range "{{{
+    let ref = s:GetGitvSha(a:firstline)
+
+    echom "Reset " . a:mode . " to " . ref
+    exec 'Git reset ' . a:mode . " " . ref
+endfu "}}}
+fu! s:DeleteRef() range "{{{
+    let refs = s:GetGitvRefs(a:firstline)
+    call filter(refs, 'v:val !=? "HEAD"')
+    let choice = confirm("Choose branch to delete:", s:GetConfirmString(refs, "Cancel"))
+    if choice == 0
+        return
+    endif
+    let choice = get(refs, choice-1, "")
+    if choice == ""
+        return
+    endif
+    if match(choice, 'tag: .*') < 0
+        let command = "branch"
+    else
+        let command = "tag"
+    endif
+    let choice = substitute(choice, "^t:", "", "")
+    let choice = substitute(choice, "^r:", "", "")
+    let choice = substitute(choice, "^tag: t:", "", "")
+    if s:IsFileMode()
+        let relPath = s:GetRelativeFilePath()
+        let choice .= " -- " . relPath
+    endif
+    echom "Delete " . command . " " . choice
+    exec 'Git ' . command . " -d " . choice
+endfu "}}}
 fu! s:StatGitvCommit() range "{{{
     let shafirst = s:GetGitvSha(a:firstline)
     let shalast  = s:GetGitvSha(a:lastline)
@@ -1151,4 +1239,4 @@ endfunction "}}} }}}
 let &cpo = s:savecpo
 unlet s:savecpo
 
- " vim:fdm=marker
+ " vim:set et sw=4 ts=4 fdm=marker:

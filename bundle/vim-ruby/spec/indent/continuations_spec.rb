@@ -176,4 +176,52 @@ describe "Indenting" do
         'b'
     EOF
   end
+
+  specify "continuations in an if-clause condition" do
+    # See https://github.com/vim-ruby/vim-ruby/issues/215 for details
+    assert_correct_indenting <<-EOF
+      if foo || bar ||
+          bong &&
+          baz || bing
+        puts "foo"
+      end
+    EOF
+  end
+
+  specify "continuations with round brackets" do
+    # See https://github.com/vim-ruby/vim-ruby/issues/17 for details
+    assert_correct_indenting <<-EOF
+      foo and
+        (bar and
+         baz) and
+        bing
+    EOF
+  end
+
+  specify "block within an argument list" do
+    # See https://github.com/vim-ruby/vim-ruby/issues/312 for details
+    assert_correct_indenting <<-EOF
+      foo(
+        x: 1,
+        y: [1, 2, 3].map { |i|
+          i + 1
+        }
+      )
+    EOF
+  end
+
+  specify "backslashes" do
+    # See https://github.com/vim-ruby/vim-ruby/issues/311 for details
+    assert_correct_indenting <<-EOF
+      def foo
+        x = 1
+
+        string = ". \#{x}" \\
+          "xyz"
+
+        puts string
+        puts string
+      end
+    EOF
+  end
 end
