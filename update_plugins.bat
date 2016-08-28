@@ -24,8 +24,6 @@ REM L9: Dependency for autocomplpop
 git clone https://github.com/vim-scripts/L9.git %TEMPDIR%\L9 
 REM NERD Commenter: Makes commenting fun! (No space after comment)
 git clone https://github.com/scrooloose/nerdcommenter.git %TEMPDIR%\nerdcommenter 
-REM NERD Tree: File browser
-git clone https://github.com/scrooloose/nerdtree %TEMPDIR%\nerdtree 
 REM Repeat: Required to repeat actions with '.' in surround and commentary plugins
 git clone https://github.com/tpope/vim-repeat.git %TEMPDIR%\vim-repeat 
 REM Ruby: Provides general support for Ruby like text-objects/motions/omnicompletion
@@ -50,8 +48,12 @@ REM Togglelist: Allows for a binding to toggle the quicklist and locationlist
 git clone https://github.com/milkypostman/vim-togglelist.git %TEMPDIR%\togglelist 
 REM Tmux-Navigator: Use vim key bindings to navigate vim windows and tmux windows
 git clone https://github.com/christoomey/vim-tmux-navigator.git %TEMPDIR%\tmux-navigator 
+REM vmifiler: File Explorer
+git clone https://github.com/Shougo/vimfiler.vim.git %TEMPDIR%\vimfiler
 REM Vimux: Create a 20% tall horizontal pane under your current tmux pane and execute a command in it without losing focus of vim
 git clone https://github.com/benmills/vimux.git %TEMPDIR%\vimux 
+REM unite: Dependency for vimfiler and unified search
+git clone https://github.com/Shougo/unite.vim.git %TEMPDIR%\unite
 
 robocopy temp\ bundle\ /mir /xd .git /xf .gitignore
 rmdir /q /s %TEMPDIR%
