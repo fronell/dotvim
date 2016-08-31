@@ -4,8 +4,7 @@ set BUNDLEDIR=bundle
 mkdir %TEMPDIR%
 
 REM Ack: Vim interface for ack
-REM Commenting out because of the ack.pl change
-REM git clone https://github.com/mileszs/ack.vim.git %TEMPDIR%\ack 
+git clone https://github.com/mileszs/ack.vim.git %TEMPDIR%\ack 
 REM AutoComplPop: Fork that does not automatically select first item in popup menu
 REM More here: https://bitbucket.org/ns9tks/vim-autocomplpop/issue/53/make-autoselection-of-the-first-item
 git clone https://github.com/dirkwallenstein/vim-autocomplpop %TEMPDIR%\autocomplpop 
@@ -13,6 +12,8 @@ REM Bbye: Deleting a buffer without closing the window
 git clone https://github.com/moll/vim-bbye.git %TEMPDIR%\vim-bbye 
 REM Commentary: Makes commenting fun! (Inserts a space after comment)
 git clone https://github.com/tpope/vim-commentary.git %TEMPDIR%\vim-commentary 
+REM ctrlsf: An ack/ag/pt powered search and view tool
+git clone https://github.com/dyng/ctrlsf.vim.git %TEMPDIR%\ctrlsf
 REM Ctrl-P: Fuzzy finder for files/tags/buffers
 git clone https://github.com/ctrlpvim/ctrlp.vim %TEMPDIR%\ctrlp 
 REM Endwise: Automatically closes programming structures like adding an end to Ruby blocks
