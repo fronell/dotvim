@@ -4,7 +4,8 @@ set BUNDLEDIR=bundle
 mkdir %TEMPDIR%
 
 REM Ack: Vim interface for ack
-git clone https://github.com/mileszs/ack.vim.git %TEMPDIR%\ack 
+REM Commenting out because of the ack.pl change
+REM git clone https://github.com/mileszs/ack.vim.git %TEMPDIR%\ack 
 REM AutoComplPop: Fork that does not automatically select first item in popup menu
 REM More here: https://bitbucket.org/ns9tks/vim-autocomplpop/issue/53/make-autoselection-of-the-first-item
 git clone https://github.com/dirkwallenstein/vim-autocomplpop %TEMPDIR%\autocomplpop 
@@ -24,6 +25,8 @@ REM L9: Dependency for autocomplpop
 git clone https://github.com/vim-scripts/L9.git %TEMPDIR%\L9 
 REM NERD Commenter: Makes commenting fun! (No space after comment)
 git clone https://github.com/scrooloose/nerdcommenter.git %TEMPDIR%\nerdcommenter 
+REM The Platinum Searcher: Vim interface for pt
+git clone https://github.com/nazo/pt.vim.git %TEMPDIR%\pt
 REM Repeat: Required to repeat actions with '.' in surround and commentary plugins
 git clone https://github.com/tpope/vim-repeat.git %TEMPDIR%\vim-repeat 
 REM Ruby: Provides general support for Ruby like text-objects/motions/omnicompletion
