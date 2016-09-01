@@ -244,9 +244,15 @@ noremap <leader><space> :noh<cr>:call clearmatches()<cr>
 """ Toggle between last used buffers
 """" Notice how its the ^ and not 6
 map <Leader>bt <C-^>
+map <Leader>bd :bd<CR>
 """ Buffer Surfer
 nmap <Leader>bb :BufSurfBack<CR>
 nmap <Leader>bf :BufSurfForward<CR>
+
+" B
+"" Buffer navigation
+""" Delete the buffer but don't close window
+map <Leader>Bd :Bd<CR>
 
 " c
 "" Window mappings
@@ -290,7 +296,11 @@ nmap <script> <leader>ll :call ToggleLocationList()<CR>
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " n
-map <leader>n :NERDTreeToggle<CR>
+" VimFiler
+map <leader>nn :VimFiler<CR>
+map <leader>ne :VimFilerExplorer<CR>
+map <leader>nb :VimFilerBuffer<CR>
+map <leader>ns :VimFilerSplit<CR>
 
 " N
 "" Toggle line numbers
@@ -319,6 +329,7 @@ nmap <script> <leader>qq :call ToggleQuickfixList()<CR>
 
 " r
 map <leader>rr :w<CR>:!ruby %<CR>
+map <leader>rp :w<CR>:!python %<CR>
 "" Reload vimrc
 map <leader>rv :source $MYVIMRC<CR>
 
@@ -348,6 +359,15 @@ map <Leader>vi :VimuxInspectRunner<CR>
 map <Leader>vq :VimuxCloseRunner<CR>
 map <Leader>vx :VimuxInterruptRunner<CR>
 map <Leader>vz :call VimuxZoomRunner()<CR>
+
+" w
+"" Change working directories
+""" Non-work specific directories
+"""" Set CWD to the directory of the currently open file
+map <Leader>wcc :cd %:p:h<CR>
+""" Work specific directories
+map <Leader>wwc :cd C:\repos\NetworkGroup\WAN\configOmatic<CR>
+map <Leader>wwr :cd c:\repos<CR>
 
 " W
 "" Toggle word wrap
