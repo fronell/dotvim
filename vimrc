@@ -266,11 +266,6 @@ map <Leader>cj <C-W>j<C-W>c
 map <Leader>ch <C-W>h<C-W>c
 """ Close left window
 map <Leader>cl <C-W>l<C-W>c
-"" Conque
-""" Open conque in a new split running bash in normal mode
-map <Leader>ct :ConqueTermSplit bash<CR><C-e>
-""" Reopen conque buffer in a split in normal mode
-map <Leader>cv :sp <BAR> b bash<CR><C-e>
 
 " d
 "" Diffing
@@ -383,6 +378,15 @@ map ]Q :clast<CR>
 map [q :cprev<CR>
 map [Q :cfirst<CR>
 map <Leader>bf :BufSurfForward<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Commands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! -nargs=* As execute "Ack!" '<args>'
+command! -nargs=* Af execute "AckFile!" '<args>'
+command! -nargs=* Fs execute "CtrlSF" '<args>'
+command! -nargs=* Ff execute "CtrlSF -filematch" '<args>'
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

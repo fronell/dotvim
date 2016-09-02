@@ -15,18 +15,23 @@ The steps below blow away your existing vim configuration so be careful!
 
 The steps below blow away your existing vim configuration so be careful!
 
-Its a two-step process with Windows because you cannot create symlinks as a regular user.  Instead, we have to determine our user profile directory and then open up a command prompt with Admin privileges to create the symlink.
-
-Open a command prompt as a regular user and do the following:
+Open a command prompt as the Administrator and do the following:
 
     cd %UserProfile%
     rmdir vimfiles /S /Q
     git clone https://github.com/fronell/dotvim.git vimfiles
-
-Open a command prompt as the Administrator and do the following:
-
-    cd <UserProfile dir from above>
     del _vimrc
     mklink _vimrc vimfiles\vimrc
 
-# Managing Plugins
+### Ack for Windows
+
+The instructions below use the Perl binary that comes with git for Windows
+
+  Download the single-file version of ack at:
+    http://beyondgrep.com/install/
+  Rename the file to ack.pl and place it in a directory thats in the System PATH
+  Open an Administrator command prompt and run the following commands:
+    assoc .pl=Perl
+    ftype Perl="c:\Program Files\git\usr\bin\perl.exe" "%1" %*
+  Do not do the association through Windows Explorer!
+  After that, you should be able to run ack.pl and use it with Vim
