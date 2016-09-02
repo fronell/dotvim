@@ -273,6 +273,13 @@ map <Leader>do :windo diffthis<CR>
 map <leader>dc :diffoff!<CR>
 map <leader>du :diffupdate<CR>
 
+" e
+"" Opening files
+""" vimrc
+map <Leader>evw :e C:\Users\chrwor01\vimfiles\vimrc<CR>
+map <Leader>evh :e C:\Users\Chris Wornell\vimfiles\vimrc<CR>
+map <Leader>evw :e ~/.vimrc<CR>
+
 " f
 map <leader>fi :setlocal foldmethod=indent<CR>
 map <leader>fs :setlocal foldmethod=syntax<CR>
@@ -427,6 +434,8 @@ let g:ConqueTerm_EscKey = '<C-e>'
 " CtrlP
 "" Enable tag mode in CtrlP
 let g:ctrlp_extensions = ['tag']
+"" Setting to 0 tells CtrlP to use CWD
+let g:ctrlp_working_path_mode = 0
 
 " NERDTree
 let NERDTreeWinSize = 50
