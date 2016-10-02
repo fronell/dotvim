@@ -220,9 +220,11 @@ inoremap kj <esc>
 
 " Save and remain in insert mode
 inoremap <F2> <C-o>:w<cr>
+inoremap df <C-o>:w<cr>
 
 " Save and exit insert mode
 inoremap <F3> <esc>:w<cr>
+inoremap fd <esc>:w<cr>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -436,6 +438,9 @@ let g:ConqueTerm_EscKey = '<C-e>'
 let g:ctrlp_extensions = ['tag']
 "" Setting to 0 tells CtrlP to use CWD
 let g:ctrlp_working_path_mode = 0
+
+" Jedi-Vim
+let g:jedi#completions_command = "<C-N>"
 
 " NERDTree
 let NERDTreeWinSize = 50
