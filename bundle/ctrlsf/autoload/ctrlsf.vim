@@ -1,8 +1,8 @@
 " ============================================================================
-" Description: An ack/ag/pt powered code search and view tool.
+" Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.7.3
+" Version: 1.8.2
 " ============================================================================
 
 """""""""""""""""""""""""""""""""
@@ -35,6 +35,11 @@ func! s:ExecSearch(args, only_quickfix) abort
         return -1
     endif
 
+    " Print error messages from backend (Debug Mode)
+    call ctrlsf#log#Debug("Errors reported by backend:\n%s",
+                \ ctrlsf#backend#LastErrors())
+
+    " Parsing
     call ctrlsf#db#ParseAckprgResult(output)
 
     " Only populate and open the quickfix window
@@ -127,8 +132,12 @@ endf
 " Quit()
 "
 func! ctrlsf#Quit() abort
-    call ctrlsf#preview#ClosePreviewWindow()
-    call ctrlsf#win#CloseMainWindow()
+    if g:ctrlsf_confirm_unsaving_quit &&
+                \ !ctrlsf#buf#WarnIfChanged()
+        return
+    endif
+
+    call s:Quit()
 endf
 
 " OpenLocList()
@@ -156,6 +165,15 @@ func! ctrlsf#JumpTo(mode) abort
         return
     endif
 
+    if (a:mode ==# "open"
+                \ || a:mode ==# "split"
+                \ || a:mode ==# "vsplit"
+                \ || a:mode ==# "tab") &&
+                \ g:ctrlsf_confirm_unsaving_quit &&
+                \ !ctrlsf#buf#WarnIfChanged()
+        return
+    endif
+
     let lnum = line.lnum
     let col  = empty(match)? 0 : match.col
 
@@ -165,12 +183,16 @@ func! ctrlsf#JumpTo(mode) abort
         call s:OpenFileInWindow(file, lnum, col, 2, 0)
     elseif a:mode ==# 'split'
         call s:OpenFileInWindow(file, lnum, col, 1, 1)
+    elseif a:mode ==# 'vsplit'
+        call s:OpenFileInWindow(file, lnum, col, 1, 2)
     elseif a:mode ==# 'tab'
         call s:OpenFileInTab(file, lnum, col, 1)
     elseif a:mode ==# 'tab_background'
         call s:OpenFileInTab(file, lnum, col, 2)
     elseif a:mode ==# 'preview'
-        call s:PreviewFile(file, lnum, col)
+        call s:PreviewFile(file, lnum, col, 0)
+    elseif a:mode ==# 'preview_foreground'
+        call s:PreviewFile(file, lnum, col, 1)
     endif
 endf
 
@@ -212,11 +234,12 @@ endf
 " About split:
 "
 " '0' means don't split by default unless there exists unsaved changes.
-" '1' means split in any case.
+" '1' means split horizontally.
+" '2' means split vertically
 "
 func! s:OpenFileInWindow(file, lnum, col, mode, split) abort
     if a:mode == 1 && g:ctrlsf_auto_close
-        call ctrlsf#Quit()
+        call s:Quit()
     endif
 
     let target_winnr = ctrlsf#win#FindTargetWindow(a:file)
@@ -227,7 +250,11 @@ func! s:OpenFileInWindow(file, lnum, col, mode, split) abort
 
         if bufname('%') !~# a:file
             if a:split || (&modified && !&hidden)
-                exec 'silent split ' . fnameescape(a:file)
+                if a:split == 2
+                    exec 'silent vertical split ' . fnameescape(a:file)
+                else
+                    exec 'silent split ' . fnameescape(a:file)
+                endif
             else
                 exec 'silent edit ' . fnameescape(a:file)
             endif
@@ -252,7 +279,7 @@ endf
 "
 func! s:OpenFileInTab(file, lnum, col, mode) abort
     if a:mode == 1 && g:ctrlsf_auto_close
-        call ctrlsf#Quit()
+        call s:Quit()
     endif
 
     exec 'silen tabedit ' . fnameescape(a:file)
@@ -270,7 +297,7 @@ endf
 
 " s:PreviewFile()
 "
-func! s:PreviewFile(file, lnum, col) abort
+func! s:PreviewFile(file, lnum, col, follow) abort
     call ctrlsf#preview#OpenPreviewWindow()
 
     if !exists('b:ctrlsf_file') || b:ctrlsf_file !=# a:file
@@ -288,7 +315,16 @@ func! s:PreviewFile(file, lnum, col) abort
         call ctrlsf#hl#HighlightSelectedLine()
     endif
 
-    call ctrlsf#win#FocusMainWindow()
+    if !a:follow
+        call ctrlsf#win#FocusMainWindow()
+    endif
+endf
+
+" s:Quit()
+"
+func! s:Quit() abort
+    call ctrlsf#preview#ClosePreviewWindow()
+    call ctrlsf#win#CloseMainWindow()
 endf
 
 " ClearSelectedLine()

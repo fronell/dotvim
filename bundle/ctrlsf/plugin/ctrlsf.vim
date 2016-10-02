@@ -1,8 +1,8 @@
 " ============================================================================
-" Description: An ack/ag/pt powered code search and view tool.
+" Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.7.3
+" Version: 1.8.2
 " ============================================================================
 
 " Loading Guard {{{1
@@ -97,6 +97,12 @@ if !exists('g:ctrlsf_confirm_save')
     let g:ctrlsf_confirm_save = 1
 endif
 " }}}
+"
+" g:ctrlsf_confirm_unsaving_quit {{{2
+if !exists('g:ctrlsf_confirm_unsaving_quit')
+    let g:ctrlsf_confirm_unsaving_quit = 1
+endif
+" }}}
 
 " g:ctrlsf_context {{{2
 if !exists('g:ctrlsf_context')
@@ -139,9 +145,11 @@ let s:default_mapping = {
     \ "open"    : ["<CR>", "o"],
     \ "openb"   : "O",
     \ "split"   : "<C-O>",
+    \ "vsplit"  : "",
     \ "tab"     : "t",
     \ "tabb"    : "T",
     \ "popen"   : "p",
+    \ "popenf"  : "P",
     \ "quit"    : "q",
     \ "next"    : "<C-J>",
     \ "prev"    : "<C-K>",

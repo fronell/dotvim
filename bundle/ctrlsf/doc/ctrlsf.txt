@@ -2,7 +2,7 @@
 
 Author:  Ye Ding <dygvirus@gmail.com>
 Licence: Vim licence, see |license|
-Version: 1.7.3
+Version: 1.8.2
 
 
            .-') _   _  .-')              .-')               
@@ -235,6 +235,8 @@ mode:
 
     <p>            Open a preview window to view file.
 
+    <P>            Open a preview window to view file and switch focus to it.
+
     <O>            Like <o>, but always leave CtrlSF window open.
 
     <T>            Like <t>, but focus CtrlSF window instead of opened new tab.
@@ -358,6 +360,14 @@ you can turn off this confirmation by
 >
     let g:ctrlsf_confirm_save = 0
 <
+g:ctrlsf_confirm_unsaving_quit                *'g:ctrlsf_confirm_unsaving_quit'*
+Default: 1
+Confirm before quitting if there is any unsaved change. Usually it can protect
+you from occasionally pressing 'q' then all changes blow off. You can disable
+this protection by
+>
+    let g:ctrlsf_confirm_unsaving_quit = 0
+<
 g:ctrlsf_context                                            *'g:ctrlsf_context'*
 Default: '-C 3'
 Defines how many lines around the matching line will be printed. Use same format
@@ -440,6 +450,7 @@ Default:
         "open"    : ["<CR>", "o"],
         "openb"   : "O",
         "split"   : "<C-O>",
+        "vsplit"  : "",
         "tab"     : "t",
         "tabb"    : "T",
         "popen"   : "p",

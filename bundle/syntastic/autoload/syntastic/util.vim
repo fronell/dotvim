@@ -272,9 +272,34 @@ function! syntastic#util#findGlobInParent(what, where) abort " {{{2
 endfunction " }}}2
 
 " Returns the buffer number of a filename
+" @vimlint(EVL104, 1, l:old_shellslash)
 function! syntastic#util#fname2buf(fname) abort " {{{2
-    return bufnr('^' . escape( fnamemodify(a:fname, ':p'), '\$.*~[' ) . '$')
+    if exists('+shellslash')
+        " bufnr() can't cope with backslashes
+        let old_shellslash = &shellslash
+        let &shellslash = 1
+    endif
+
+    " this is a best-effort attempt to escape file patterns (cf. :h file-pattern)
+    " XXX it fails for filenames containing something like \{2,3}
+    for md in [':~:.', ':~', ':p']
+        let buf = bufnr('^' . escape(fnamemodify(a:fname, md), '\*?,{}[') . '$')
+        if buf != -1
+            break
+        endif
+    endfor
+    if buf == -1
+        " XXX definitely wrong, but hope is the last thing to die :)
+        let buf = bufnr(fnamemodify(a:fname, ':p'))
+    endif
+
+    if exists('+shellslash')
+        let &shellslash = old_shellslash
+    endif
+
+    return buf
 endfunction " }}}2
+" @vimlint(EVL104, 0, l:old_shellslash)
 
 " Returns unique elements in a list
 function! syntastic#util#unique(list) abort " {{{2
@@ -347,8 +372,8 @@ function! syntastic#util#stamp() abort " {{{2
     return split( split(reltimestr(reltime(g:_SYNTASTIC_START)))[0], '\.' )
 endfunction " }}}2
 
-function! syntastic#util#setChangedtick(buf) abort " {{{2
-    call setbufvar(a:buf, 'syntastic_changedtick', getbufvar(a:buf, 'changedtick'))
+function! syntastic#util#setLastTick(buf) abort " {{{2
+    call setbufvar(a:buf, 'syntastic_lasttick', getbufvar(a:buf, 'changedtick'))
 endfunction " }}}2
 
 let s:_wid_base = 'syntastic_' . getpid() . '_' . reltimestr(g:_SYNTASTIC_START) . '_'

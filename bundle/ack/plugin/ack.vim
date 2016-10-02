@@ -12,8 +12,6 @@ if !exists("g:ackprg")
     let g:ackprg = "ack-grep"
   elseif executable('ack')
     let g:ackprg = "ack"
-  elseif executable('ack.pl')
-    let g:ackprg = "ack.pl"
   else
     finish
   endif

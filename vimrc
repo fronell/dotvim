@@ -444,6 +444,7 @@ let NERDTreeWinSize = 50
 " Syntax highlighting can really slow things down if a large file is open
 " Going to leave it enabled for now until I experience slow down issues
 "let g:syntastic_enable_highlighting=0
+let g:syntastic_python_checkers = ['flake8', 'python']
 
 " Taglist
 "" Place taglist on the right side
