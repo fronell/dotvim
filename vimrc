@@ -103,7 +103,10 @@ set wildignore+=.DS_Store,*.so
 """ Windows
 set wildignore+=*.exe,*.dll,*.doc*,*.xls*
 
-set nu  "Turn on line numbering
+" Turn on line numbering
+set number
+" Turn on line relative line numbering
+set relativenumber
 
 " Set backspace config
 set backspace=eol,start,indent
