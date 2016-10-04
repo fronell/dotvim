@@ -432,9 +432,11 @@ let g:aghighlight=1
 
 " Conque
 "" Does not work, pass <C-e> in mappings as a workaround to open in normal mode
-let g:ConqueTerm_InsertOnEnter = 0
-let g:ConqueTerm_FastMode = 1
+let g:ConqueTerm_Color = 1
+let g:ConqueTerm_FastMode = 0
 let g:ConqueTerm_EscKey = '<C-e>'
+let g:ConqueTerm_InsertOnEnter = 0
+let g:ConqueTerm_PyVersion = 3
 
 " CtrlP
 "" Enable tag mode in CtrlP
