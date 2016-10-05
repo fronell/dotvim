@@ -5,6 +5,8 @@ mkdir %TEMPDIR%
 
 REM Ack: Vim interface for ack
 git clone https://github.com/mileszs/ack.vim.git %TEMPDIR%\ack 
+REM Modify the Ack plugin to support ack.pl on Windows
+sed -i 's/= "ack"$/= "ack"\n  elseif executable(\'ack.pl\')\n    let g:ackprg = "ack.pl"/' %TEMPDIR%\ack\plugin\ack.vim
 REM AutoComplPop: Fork that does not automatically select first item in popup menu
 REM More here: https://bitbucket.org/ns9tks/vim-autocomplpop/issue/53/make-autoselection-of-the-first-item
 git clone https://github.com/dirkwallenstein/vim-autocomplpop %TEMPDIR%\autocomplpop 
