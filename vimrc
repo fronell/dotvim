@@ -281,9 +281,8 @@ map <leader>du :diffupdate<CR>
 " e
 "" Opening files
 """ vimrc
-map <Leader>evw :e C:\Users\chrwor01\vimfiles\vimrc<CR>
-map <Leader>evh :e C:\Users\Chris Wornell\vimfiles\vimrc<CR>
-map <Leader>evw :e ~/.vimrc<CR>
+map <Leader>evl :e ~/.vimrc<CR>
+map <Leader>evw :e ~\_vimrc<CR>
 
 " f
 map <leader>fi :setlocal foldmethod=indent<CR>
