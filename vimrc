@@ -455,6 +455,8 @@ let NERDTreeWinSize = 50
 "let g:syntastic_enable_highlighting=0
 let g:syntastic_python_checkers = ['pylint', 'python']
 
+let g:syntastic_mode_map = { "passive_filetypes": ["sh"] }
+
 " Taglist
 "" Place taglist on the right side
 let Tlist_Use_Right_Window = 1
