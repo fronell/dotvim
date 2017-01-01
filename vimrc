@@ -56,7 +56,7 @@ set tabstop=2
 set lbr    "Prevents word wrap from breaking words in the middle
 set tw=500 "Sets text width
 
-set si        "Smart indent
+set nosi      "Turn off Smart indent to fix issues with commenting in Python
 set wrap      "Wrap lines
 set linebreak "Wrap lines at convenient points
 
@@ -448,6 +448,9 @@ let g:jedi#completions_command = "<C-N>"
 
 " NERDTree
 let NERDTreeWinSize = 50
+
+" Python-mode
+let g:pymode_python = 'python3'
 
 " Syntastic
 " Syntax highlighting can really slow things down if a large file is open
