@@ -25,13 +25,18 @@ Open a command prompt as the Administrator and do the following:
 
 ### Ack for Windows
 
-The instructions below use the Perl binary that comes with git for Windows
+The instructions below use the Perl binary that comes with git for Windows:
 
-  Download the single-file version of ack at:
-    http://beyondgrep.com/install/
-  Rename the file to ack.pl and place it in a directory thats in the System PATH
-  Open an Administrator command prompt and run the following commands:
-    assoc .pl=Perl
-    ftype Perl="c:\Program Files\git\usr\bin\perl.exe" "%1" %*
-  Do not do the association through Windows Explorer!
-  After that, you should be able to run ack.pl and use it with Vim
+    Download the single-file version of ack at:
+      http://beyondgrep.com/install/
+    Rename the file to ack.pl and place it in a directory thats in the System PATH
+    Open an Administrator command prompt and run the following commands:
+      assoc .pl=Perl
+      ftype Perl="c:\Program Files\git\usr\bin\perl.exe" "%1" %*
+    Do not do the association through Windows Explorer!
+    After that, you should be able to run ack.pl and use it with Vim
+
+### ctags for Windows
+
+ctags.exe can be downloaded from http://ctags.sourceforge.net/ and needs to be
+placed in a directory %PATH% so vim can call it.
