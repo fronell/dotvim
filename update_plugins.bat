@@ -73,11 +73,12 @@ mkdir %BUNDLEDIR%
 robocopy temp\ bundle\ /mir /xd .git /xf .gitignore
 rmdir /q /s %TEMPDIR%
 
-REM Update ftplugin
+REM Rebuild ftplugin for plugins that don't come in bundle form
 rmdir /q /s %FTPLUGINDIR%
 mkdir %FTPLUGINDIR%
 cd %FTPLUGINDIR%
 wget --no-check-certificate https://raw.githubusercontent.com/Crapworks/python_fn.vim/master/ftplugin/python/python_fn.vim
 cd ..
 
-git add .
+REM Will manually add changes for now
+REM git add .
