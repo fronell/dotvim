@@ -44,7 +44,7 @@ Here we rename a method named `MoveCursor()` to `Cursor()` in multiple files, us
 
 ## Installation
 
-1. Make sure you have [ack][1], [ag][2] or [pt][8] installed. (Note: currently only Ack2 is supported by plan)
+1. Make sure you have [ack][1], [ag][2], [pt][8] or [rg][10] installed. (Note: currently only Ack2 is supported by plan)
 
 2. An easy way to install CtrlSF is using a package manager, like [pathogen][3], [vundle][4], [neobundle][5] or [vim-plug][9].
 
@@ -113,6 +113,10 @@ CtrlSF provides many maps you can use for quick accessing all features, here I l
 - `<Plug>CtrlSFCwordPath`
 
     Input `:CtrlSF foo ` in command line where `foo` is word under the cursor.
+
+- `<Plug>CtrlSFCCwordPath`
+
+    Like `<Plug>CtrlSFCwordPath`, but also add word boundary around searching word.
 
 - `<Plug>CtrlSFPwordPath`
 
@@ -264,7 +268,7 @@ Read `:h ctrlsf-arguments` for a full list of arguments.
         \ }
     ```
 
-- `g:ctrlsf_populate_qflist` defines if CtrlSF will also feed quickfix and location list with search result. By default this feture is disabled but you can enable it by
+- `g:ctrlsf_populate_qflist` defines if CtrlSF will also feed quickfix and location list with search result. By default this feature is disabled but you can enable it by
 
     ```vim
     let g:ctrlsf_populate_qflist = 1
@@ -333,3 +337,4 @@ CtrlSF -I foo
 [7]: https://github.com/terryma/vim-multiple-cursors
 [8]: https://github.com/monochromegane/the_platinum_searcher
 [9]: https://github.com/junegunn/vim-plug
+[10]: https://github.com/BurntSushi/ripgrep

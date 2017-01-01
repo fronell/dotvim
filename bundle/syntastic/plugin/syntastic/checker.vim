@@ -32,6 +32,9 @@ function! g:SyntasticChecker.New(args, ...) abort " {{{2
         endif
     else
         let newObj._exec_default = get(a:args, 'exec', newObj._name)
+        if newObj._exec_default ==# ''
+            let newObj._exec_default = '<dummy>'
+        endif
         let prefix = 'SyntaxCheckers_' . newObj._filetype . '_' . newObj._name . '_'
 
         if has_key(a:args, 'enable')
@@ -62,6 +65,10 @@ function! g:SyntasticChecker.getName() abort " {{{2
     return self._name
 endfunction " }}}2
 
+function! g:SyntasticChecker.getCName() abort " {{{2
+    return self._filetype . '/' . self._name
+endfunction " }}}2
+
 " Synchronise _exec with user's setting.  Force re-validation if needed.
 "
 " XXX: This function must be called at least once before calling either
@@ -89,7 +96,7 @@ endfunction " }}}2
 
 function! g:SyntasticChecker.getLocListRaw() abort " {{{2
     let checker_start = reltime()
-    let name = self._filetype . '/' . self._name
+    let name = self.getCName()
 
     if has_key(self, '_enable')
         let status = syntastic#util#var(self._enable, -1)
@@ -147,7 +154,7 @@ function! g:SyntasticChecker.getVersion(...) abort " {{{2
             call self.setVersion(parsed_ver)
         else
             call syntastic#log#ndebug(g:_SYNTASTIC_DEBUG_LOCLIST, 'checker output:', split(version_output, "\n", 1))
-            call syntastic#log#error("checker " . self._filetype . "/" . self._name . ": can't parse version string (abnormal termination?)")
+            call syntastic#log#error("checker " . self.getCName() . ": can't parse version string (abnormal termination?)")
         endif
     endif
     return get(self, '_version', [])
@@ -161,7 +168,7 @@ function! g:SyntasticChecker.setVersion(version) abort " {{{2
 endfunction " }}}2
 
 function! g:SyntasticChecker.log(msg, ...) abort " {{{2
-    let leader = self._filetype . '/' . self._name . ': '
+    let leader = self.getCName() . ': '
     if a:0
         call syntastic#log#debug(g:_SYNTASTIC_DEBUG_CHECKERS, leader . a:msg, a:1)
     else

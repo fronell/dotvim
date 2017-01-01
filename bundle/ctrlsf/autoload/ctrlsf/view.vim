@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.8.2
+" Version: 1.8.3
 " ============================================================================
 
 func! s:Summary(resultset) abort
@@ -82,11 +82,7 @@ endf
 "
 func! ctrlsf#view#Reflect(vlnum) abort
     let resultset = ctrlsf#db#ResultSet()
-
-    let ret = s:BSearch(resultset, 0, len(resultset) - 1, a:vlnum)
-    call ctrlsf#log#Debug("Reflect: vlnum: %s, result: %s", a:vlnum, string(ret))
-
-    return ret
+    return s:BSearch(resultset, 0, len(resultset) - 1, a:vlnum)
 endf
 
 func! s:BSearch(resultset, left, right, vlnum) abort
@@ -128,18 +124,19 @@ endf
 
 " FindNextMatch()
 "
-" Find next match. Wrapping around or not depends on value of 'wrapscan'.
+" Find next match.
 "
 " Parameters
-" {vlnum}   the line number of search base
 " {forward} true or false
+" {wrapscan} true or false
 "
 " Returns
 " [vlnum, vcol] line number and column number of next match
 "
-func! ctrlsf#view#FindNextMatch(vlnum, forward) abort
+func! ctrlsf#view#FindNextMatch(forward, wrapscan) abort
     let regex = ctrlsf#pat#MatchPerLineRegex()
     let flag  = a:forward ? 'n' : 'nb'
+    let flag .= a:wrapscan ? 'w' : 'W'
     return searchpos(regex, flag)
 endf
 
