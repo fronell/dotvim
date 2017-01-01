@@ -1,6 +1,9 @@
 set TEMPDIR=temp
 set BUNDLEDIR=bundle
+set FTPLUGINDIR=ftplugin
 
+REM We use a temp dir so we can exclude .git and .gitignore files when we 
+REM copy the clones to the bundle dir
 mkdir %TEMPDIR%
 
 REM Ack: Vim interface for ack
@@ -30,6 +33,8 @@ REM L9: Dependency for autocomplpop
 git clone https://github.com/vim-scripts/L9.git %TEMPDIR%\L9 
 REM The Platinum Searcher: Vim interface for pt
 git clone https://github.com/nazo/pt.vim.git %TEMPDIR%\pt
+REM Python-mode: Keeping here for reference in case I need to use it later
+REM git clone https://github.com/python-mode/python-mode %TEMPDIR%\python-mode
 REM Repeat: Required to repeat actions with '.' in surround and commentary plugins
 git clone https://github.com/tpope/vim-repeat.git %TEMPDIR%\repeat 
 REM Ruby: Provides general support for Ruby like text-objects/motions/omnicompletion
@@ -48,6 +53,8 @@ REM Tabular: Makes aligning text fun!
 git clone https://github.com/godlygeek/tabular.git %TEMPDIR%\tabular 
 REM Tagbar: Displays tags ordered by scope
 git clone https://github.com/majutsushi/tagbar.git %TEMPDIR%\tagbar 
+REM Tcomment: Commenting, removed it before but not sure why
+git clone https://github.com/tomtom/tcomment_vim.git %TEMPDIR%\tcomment
 REM Text-Objects: Dependency for vim-textobj-rubyblock
 git clone https://github.com/kana/vim-textobj-user.git %TEMPDIR%\textobj-user 
 REM Togglelist: Allows for a binding to toggle the quicklist and locationlist
@@ -61,6 +68,16 @@ git clone https://github.com/benmills/vimux.git %TEMPDIR%\vimux
 REM unite: Dependency for vimfiler and unified search
 git clone https://github.com/Shougo/unite.vim.git %TEMPDIR%\unite
 
+rmdir /q /s %BUNDLEDIR%
+mkdir %BUNDLEDIR%
 robocopy temp\ bundle\ /mir /xd .git /xf .gitignore
 rmdir /q /s %TEMPDIR%
+
+REM Update ftplugin
+rmdir /q /s %FTPLUGINDIR%
+mkdir %FTPLUGINDIR%
+cd %FTPLUGINDIR%
+wget --no-check-certificate https://raw.githubusercontent.com/Crapworks/python_fn.vim/master/ftplugin/python/python_fn.vim
+cd ..
+
 git add .
