@@ -38,5 +38,6 @@ The instructions below use the Perl binary that comes with git for Windows:
 
 ### ctags for Windows
 
-ctags.exe can be downloaded from http://ctags.sourceforge.net/ and needs to be
-placed in a directory %PATH% so vim can call it.
+    Download ctags for Windows from:
+      http://ctags.sourceforge.net/
+    Place ctags.exe in a directory thats in %PATH%
