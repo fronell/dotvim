@@ -15,6 +15,10 @@ The steps below blow away your existing vim configuration so be careful!
 
 The steps below blow away your existing vim configuration so be careful!
 
+Download Vim from the following URL:
+
+    https://tuxproject.de/projects/vim/x64/
+
 Open a command prompt as the Administrator and do the following:
 
     cd %UserProfile%
