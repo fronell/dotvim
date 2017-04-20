@@ -450,7 +450,8 @@ let g:jedi#completions_command = "<C-N>"
 let NERDTreeWinSize = 50
 
 " Python-mode
-let g:pymode_python = 'python3'
+"" Set to python3 for Python 3
+let g:pymode_python = 'python'
 
 " Syntastic
 " Syntax highlighting can really slow things down if a large file is open

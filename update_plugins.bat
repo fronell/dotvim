@@ -33,7 +33,7 @@ REM L9: Dependency for autocomplpop
 git clone https://github.com/vim-scripts/L9.git %TEMPDIR%\L9 
 REM The Platinum Searcher: Vim interface for pt
 git clone https://github.com/nazo/pt.vim.git %TEMPDIR%\pt
-REM Python-mode: Keeping here for reference in case I need to use it later
+REM Python-mode: Can conflict with jedi-vim according to https://github.com/davidhalter/jedi-vim/issues/163
 REM git clone https://github.com/python-mode/python-mode %TEMPDIR%\python-mode
 REM Repeat: Required to repeat actions with '.' in surround and commentary plugins
 git clone https://github.com/tpope/vim-repeat.git %TEMPDIR%\repeat 
