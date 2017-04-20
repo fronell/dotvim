@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.8.3
+" Version: 1.9.0
 " ============================================================================
 
 " option list of CtrlSF
@@ -217,6 +217,7 @@ endf
 "
 func! s:ParseOptions(options_str) abort
     let options = {}
+    let no_more_options = 0
     let tokens  = ctrlsf#lex#Tokenize(a:options_str)
 
     let i = 0
@@ -225,7 +226,10 @@ func! s:ParseOptions(options_str) abort
         let i += 1
 
         if !has_key(s:option_list, token)
-            if token =~# '^-'
+            if token == '--'
+              let no_more_options = 1
+              continue
+            elseif token =~# '^-' && !no_more_options
                 call ctrlsf#log#Error("Unknown option '%s'. If you are user
                     \ from pre-v1.0, please be aware of that CtrlSF no longer
                     \ supports all options of ack and ag since v1.0. Read
@@ -289,7 +293,10 @@ func! ctrlsf#opt#ParseOptions(options_str) abort
     let s:options["_vimregex"] = ctrlsf#pat#Regex()
 
     " vimhlregex
-    let s:options["_vimhlregex"] = ctrlsf#pat#HighlightRegex()
+    let s:options["_vimhlregex"] = {
+                \ 'normal': ctrlsf#pat#HighlightRegex('normal'),
+                \ 'compact': ctrlsf#pat#HighlightRegex('compact')
+                \ }
 
     call ctrlsf#log#Debug("Options: %s", string(s:options))
 endf

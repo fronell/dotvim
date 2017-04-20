@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.8.3
+" Version: 1.9.0
 " ============================================================================
 
 " Log file that collects error messages from backend
@@ -102,10 +102,12 @@ func! s:BuildCommand(args) abort
         \ s:backend_args_map[runner]['regex'][ctrlsf#opt#GetRegex()])
 
     " filetype (NOT SUPPORTED BY ALL BACKEND)
-    " support backend: ag, ack
+    " support backend: ag, ack, rg
     if !empty(ctrlsf#opt#GetOpt('filetype'))
         if runner ==# 'ag' || runner ==# 'ack'
             call add(tokens, '--' . ctrlsf#opt#GetOpt('filetype'))
+        elseif runner ==# 'rg'
+            call add(tokens, '--type ' . ctrlsf#opt#GetOpt('filetype'))
         endif
     endif
 
@@ -144,6 +146,9 @@ func! s:BuildCommand(args) abort
     if !empty(extra_args)
         call add(tokens, extra_args)
     endif
+
+    " no more flags
+    call add(tokens, "--")
 
     " pattern (including escape)
     call add(tokens, shellescape(ctrlsf#opt#GetOpt('pattern')))

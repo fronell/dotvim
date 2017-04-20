@@ -2,18 +2,18 @@
 
 Author:  Ye Ding <dygvirus@gmail.com>
 Licence: Vim licence, see |license|
-Version: 1.8.3
+Version: 1.9.0
 
 
-           .-') _   _  .-')              .-')               
-          (  OO) ) ( \( -O )            ( OO ).             
-   .-----./     '._ ,------.  ,--.     (_)---\_)   ,------. 
-  '  .--./|'--...__)|   /`. ' |  |.-') /    _ | ('-| _.---' 
-  |  |('-.'--.  .--'|  /  | | |  | OO )\  :` `. (OO|(_\     
- /_) |OO  )  |  |   |  |_.' | |  |`-' | '..`''.)/  |  '--.  
- ||  |`-'|   |  |   |  .  '.'(|  '---.'.-._)   \\_)|  .--'  
-(_'  '--'\   |  |   |  |\  \  |      | \       /  \|  |_)   
-   `-----'   `--'   `--' '--' `------'  `-----'    `--'     
+           .-') _   _  .-')              .-')                                 ~
+          (  OO) ) ( \( -O )            ( OO ).                               ~
+   .-----./     '._ ,------.  ,--.     (_)---\_)   ,------.                   ~
+  '  .--./|'--...__)|   /`. ' |  |.-') /    _ | ('-| _.---'                   ~
+  |  |('-.'--.  .--'|  /  | | |  | OO )\  :` `. (OO|(_\                       ~
+ /_) |OO  )  |  |   |  |_.' | |  |`-' | '..`''.)/  |  '--.                    ~
+ ||  |`-'|   |  |   |  .  '.'(|  '---.'.-._)   \\_)|  .--'                    ~
+(_'  '--'\   |  |   |  |\  \  |      | \       /  \|  |_)                     ~
+   `-----'   `--'   `--' '--' `------'  `-----'    `--'                       ~
 
 
 ================================================================================
@@ -82,8 +82,8 @@ A typical workflow using CtrlSF is like this:
   It is free because it won't invoke a same but new search. A useful command
   |:CtrlSFToggle| is also available.
 
-  7. Alternatively run `:CtrlSFQuickfix [pattern]`, it will only open a
-  quickfix window to show search results.
+  7. If you prefer a quickfix-like result window, just try to press `M` in
+  CtrlSF window.
 
 Note: The result set will additionally be stored in a |location-list| of the
 CtrlSF window. Open it using |:lopen|
@@ -147,12 +147,6 @@ mode:
   is given, the default directory is used, which is specified by
   |g:ctrlsf_default_root|.
 
-:CtrlSFQuickfix [arguments] {pattern} [path] ...               *:CtrlSFQuickfix*
-
-  Similar to |:CtrlSF|. Search {pattern}. Default is search by literal. Show
-  result in a quickfix window if there is no existing one, otherwise reuse
-  that one.
-
 :CtrlSFOpen                                                        *:CtrlSFOpen*
 
   If CtrlSF window is closed (by <q> or |:CtrlSFClose|), reopen it. If the
@@ -190,53 +184,25 @@ mode:
     <Plug>CtrlSFPrompt      Input 'CtrlSF' in command line and waiting, just a
                             handy shortcut.
 
-    <Plug>CtrlSFQuickfixPrompt  Input 'CtrlSFQuickfix' in command line and
-                                waiting, just a handy shortcut to reveal in a
-                                quickfix window.
-
     <Plug>CtrlSFVwordPath    Input current visual selected word in command line
                              and waiting for any other user input.
 
-                             Use <Plug>CtrlSFQuickfixVwordPath for quickfix
-                             only window.
-
     <Plug>CtrlSFVwordExec    Similar to above, but execute it immediately.
-
-                             Use <Plug>CtrlSFQuickfixVwordExec for quickfix
-                             only window.
 
     <Plug>CtrlSFCwordPath    Input word in the cursor in command line and
                              waiting.
 
-                             Use <Plug>CtrlSFQuickfixCwordPath for quickfix
-                             only window.
-
     <Plug>CtrlSFCwordExec    Similar to above, but execute it immediately.
-
-                             Use <Plug>CtrlSFQuickfixCwordExec for quickfix
-                             only window.
 
     <Plug>CtrlSFCCwordPath   Similar to <Plug>CtrlSFCwordPath but will add word
                              boundary around searching word.
 
-                             Use <Plug>CtrlSFQuickfixCCwordPath for quickfix
-                             only window.
-
     <Plug>CtrlSFCCwordExec   Similar to above, but execute it immediately.
-
-                             Use <Plug>CtrlSFQuickfixCCwordExec for quickfix
-                             only window.
 
     <Plug>CtrlSFPwordPath    Input last search pattern in command line and
                              waiting.
 
-                             Use <Plug>CtrlSFQuickfixPwordPath for quickfix
-                             only window.
-
     <Plug>CtrlSFPwordExec    Similar to above, but execute it immediately.
-
-                             Use <Plug>CtrlSFQuickfixPwordExec for quickfix
-                             only window.
 
   Maps by default in CtrlSF window:
 
@@ -427,6 +393,14 @@ Explanation for each option:
 >
     let g:ctrlsf_default_root = 'project+fw'
 <
+g:ctrlsf_default_view_mode                        *'g:ctrlsf_default_view_mode'*
+Default: 'normal'
+Available: 'normal', 'compact'
+Defines default view mode of CtrlSF result window. 'normal' is a Sublime-like
+view and 'compact' is a quickfix-like view.
+>
+    let g:ctrlsf_default_view_mode = 'compact'
+<
 g:ctrlsf_extra_backend_args                      *'g:ctrlsf_extra_backend_args'*
 Default: {}
 Defines extra arguments that will be passed **literally** to backend. It's
@@ -442,7 +416,7 @@ Default: ''
 Defines directories that will be ignored by default. It's useful for backend
 that does not respect to '.gitignore'.
 >
-    let g:ctrlsf_ignore_dir = ['bower_components', 'npm_modules']
+    let g:ctrlsf_ignore_dir = ['bower_components', 'node_modules']
 <
 
 g:ctrlsf_indent                                              *'g:ctrlsf_indent'*
@@ -459,6 +433,22 @@ in editing.  Then you can change default mapping by setting this option. A
 subset of available methods is valid, those unspecified methods will use default
 keys. You can also disable a method by mapping it to an empty string.
 
+Key id and its functionality:
+>
+    open    - open file.
+    openb   - open file in background.
+    split   - split window horizontally then open file.
+    vsplit  - split window vertically then open file.
+    tab     - open file in a new tab.
+    tabb    - open file in a background new tab.
+    popen   - open preview window.
+    quit    - close main window.
+    next    - jump to next match.
+    prev    - jump to previous match.
+    pquit   - close preview window.
+    loclist - open location list in main window.
+    chgmode - switch view mode.
+<
 Default:
 >
     {
@@ -474,6 +464,7 @@ Default:
         "prev"    : "<C-K>",
         "pquit"   : "q",
         "loclist" : "",
+        "chgmode" : "M",
     }
 <
 Example:

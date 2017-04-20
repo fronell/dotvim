@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.8.3
+" Version: 1.9.0
 " ============================================================================
 
 " HighlightMatch()
@@ -15,7 +15,7 @@ func! ctrlsf#hl#HighlightMatch(...) abort
         return -1
     endif
 
-    let pattern = ctrlsf#opt#GetOpt("_vimhlregex")
+    let pattern = ctrlsf#opt#GetOpt("_vimhlregex")[ctrlsf#CurrentMode()]
     call ctrlsf#log#Debug("HighlightRegex: %s", pattern)
 
     silent! call matchdelete(w:ctrlsf_match_hlid)
@@ -36,4 +36,10 @@ endf
 "
 func! ctrlsf#hl#ClearSelectedLine() abort
     silent! call matchdelete(w:ctrlsf_line_hlid)
+endf
+
+" ReloadSyntax()
+"
+func! ctrlsf#hl#ReloadSyntax() abort
+    runtime syntax/ctrlsf.vim
 endf

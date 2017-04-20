@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-17.
-" @Last Change: 2016-12-02.
-" @Revision:    1858
+" @Last Change: 2017-02-20.
+" @Revision:    1876
 
 " call tlog#Log('Load: '. expand('<sfile>')) " vimtlib-sfile
 if exists(':Tlibtrace') != 2
@@ -137,6 +137,9 @@ endif
 if !exists("g:tcommentGuessFileType_rnoweb")
     let g:tcommentGuessFileType_rnoweb = 'r'   "{{{2
 endif
+if !exists("g:tcommentGuessFileType_vue")
+    let g:tcommentGuessFileType_vue = 'html'   "{{{2
+endif
 
 if !exists("g:tcommentIgnoreTypes_php")
     " In php files, some syntax regions are wrongly highlighted as sql 
@@ -176,6 +179,7 @@ if !exists('g:tcommentSyntaxMap')
                 \ 'bladeEcho':          'php',
                 \ 'bladePhpParenBlock': 'php',
                 \ 'erubyExpression':    'ruby',
+                \ 'rmdChung':           'r',
                 \ 'vimMzSchemeRegion':  'scheme',
                 \ 'vimPerlRegion':      'perl',
                 \ 'vimPythonRegion':    'python',
@@ -390,7 +394,7 @@ call tcomment#DefineType('autohotkey',       '; %s'             )
 call tcomment#DefineType('apache',           '# %s'             )
 call tcomment#DefineType('applescript',      '(* %s *)'         )
 call tcomment#DefineType('applescript_block',"(*%s*)\n"         )
-call tcomment#DefineType('applescript_inline','(* %s *)'        )
+call tcomment#DefineType('applescript_inline','# %s'            )
 call tcomment#DefineType('asciidoc',         '// %s'            )
 call tcomment#DefineType('asm',              '; %s'             )
 call tcomment#DefineType('asterisk',         '; %s'             )
@@ -511,6 +515,8 @@ call tcomment#DefineType('monkey',           ''' %s'            )
 call tcomment#DefineType('msidl',            '// %s'            )
 call tcomment#DefineType('msidl_block',      g:tcommentBlockC   )
 call tcomment#DefineType('nginx',            '# %s'             )
+call tcomment#DefineType('nim',              '# %s'             )
+call tcomment#DefineType('nix',              '# %s'             )
 call tcomment#DefineType('nroff',            '.\\" %s'          )
 call tcomment#DefineType('noweb',            '%% %s'            )
 call tcomment#DefineType('nsis',             '# %s'             )
@@ -805,7 +811,7 @@ function! tcomment#Comment(beg, end, ...)
     endif
     if empty(comment_mode)
         echohl WarningMsg
-        echo "TComment: Comment mode is not supported for the current filetype"
+        echom 'TComment: Comment mode is not supported for the current filetype:' string(comment_mode)
         echohl NONE
         return
     endif
@@ -1707,7 +1713,7 @@ function! s:CommentBlock(beg, end, cbeg, cend, comment_mode, comment_do, checkRx
             let rx = '\V'. s:StartColRx(a:comment_mode, a:cbeg) . '\zs'. mx
             " TLogVAR mx1, rx
             for line in split(@t, '\n')
-                let line1 = substitute(line, rx, '', 'g')
+                let line1 = substitute(line, rx, '', '')
                 call add(tt, line1)
             endfor
             let @t = join(tt, "\n")
@@ -2042,18 +2048,24 @@ endf
 
 function! s:GuessVimOptionsCommentString(comment_mode)
     " TLogVAR a:comment_mode
-    let valid_cms = (match(&commentstring, '%\@<!\(%%\)*%s') != -1)
+    let commentstring = &commentstring
+    " let valid_f = (match(substitute(commentstring, '%\@<!\(%%\)*%s', '', 'g'), '%\@<!%[^%]') == -1)
+    let valid_f = (match(commentstring, '%\@<!%\%([^%s]\|$\)') == -1)
+    if !valid_f
+        let commentstring = substitute(commentstring, '%\@<!%\ze\([^%s]\|$\)', '%%', 'g')
+    endif
+    let valid_cms = (match(commentstring, '%\@<!\(%%\)*%s') != -1)
     let ccmodes = 'r'
-    if &commentstring =~ '\S\s*%s\s*\S'
+    if commentstring =~ '\S\s*%s\s*\S'
         let ccmodes .= 'bi'
     endif
     let guess_comment_mode = s:GuessCommentMode(a:comment_mode, ccmodes)
     " TLogVAR guess_comment_mode
-    if &commentstring != s:default_comment_string && valid_cms
+    if commentstring != s:default_comment_string && valid_cms
         " The &commentstring appears to have been set and to be valid
         let cdef = copy(g:tcomment#options_commentstring)
         let cdef.mode = guess_comment_mode
-        let cdef.commentstring = &commentstring
+        let cdef.commentstring = commentstring
         return cdef
     endif
     if &comments != s:default_comments
@@ -2071,7 +2083,7 @@ function! s:GuessVimOptionsCommentString(comment_mode)
         " better we return it anyway if it is valid
         let cdef = copy(g:tcomment#options_commentstring)
         let cdef.mode = guess_comment_mode
-        let cdef.commentstring = &commentstring
+        let cdef.commentstring = commentstring
         return cdef
     else
         " &commentstring is invalid. So we return the identity string.
