@@ -19,6 +19,9 @@ Download Vim from the following URL:
 
     https://tuxproject.de/projects/vim/x64/
 
+Check which version of Visual Studio Vim was compiled with because you will need
+the C++ redistributables for that version installed for Vim to work.
+
 Open a command prompt as the Administrator and do the following:
 
     cd %UserProfile%
