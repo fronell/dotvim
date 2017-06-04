@@ -445,6 +445,7 @@ let g:ctrlp_working_path_mode = 0
 
 " Jedi-Vim
 let g:jedi#completions_command = "<C-N>"
+let g:jedi#completions_enabled = 0
 
 " NERDTree
 let NERDTreeWinSize = 50
