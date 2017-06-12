@@ -62,6 +62,9 @@ set linebreak "Wrap lines at convenient points
 
 " Disable auto-comment
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" Fixes *most* yaml auto-indenting issues, still auto-indents on newlines
+" Switched to using ft=ansible for yaml files in vim-ansible plugin
+"autocmd FileType yaml setlocal sts=2 sw=2 ts=2 expandtab indentkeys-=<:>
 
 " What to represent hidden characters as
 set listchars=tab:▸\ ,eol:¬,trail:•

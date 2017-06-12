@@ -10,6 +10,13 @@ REM Ack: Vim interface for ack
 git clone https://github.com/mileszs/ack.vim.git %TEMPDIR%\ack 
 REM Modify the Ack plugin to support ack.pl on Windows
 sed -i 's/= "ack"$/= "ack"\n  elseif executable(\'ack.pl\')\n    let g:ackprg = "ack.pl"/' %TEMPDIR%\ack\plugin\ack.vim
+REM Ansible YAML: Ansible syntax checker that supports ansible-lint
+git clone https://github.com/chase/vim-ansible-yaml.git %TEMPDIR%\ansible-yaml
+REM Modify the filetype detection in the plugin so its used for all yaml files
+sed -i "s/if fp.*/if fp =~ '.*\\\.y\\\(a\\\)\\\?ml$'/" %TEMPDIR%\ansible-yaml\ftdetect\ansible.vim
+REM Will limit loading of ft=ansible only for yaml files under ansible/*
+REM sed -i "s/if fp.*/if fp =~ 'ansible\/.*\\\.y\\\(a\\\)\\\?ml$'/" bundle\ansible-yaml\ftdetect\ansible.vim
+"if fp =~ '/ansible/.*\.y\(a\)\?ml$' || fp =~ '/\(group\|host\)_vars/'
 REM AutoComplPop: Fork that does not automatically select first item in popup menu
 REM More here: https://bitbucket.org/ns9tks/vim-autocomplpop/issue/53/make-autoselection-of-the-first-item
 git clone https://github.com/dirkwallenstein/vim-autocomplpop %TEMPDIR%\autocomplpop 
