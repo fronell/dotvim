@@ -22,6 +22,8 @@ REM More here: https://bitbucket.org/ns9tks/vim-autocomplpop/issue/53/make-autos
 git clone https://github.com/dirkwallenstein/vim-autocomplpop %TEMPDIR%\autocomplpop 
 REM Bbye: Deleting a buffer without closing the window
 git clone https://github.com/moll/vim-bbye.git %TEMPDIR%\bbye 
+REM Better Whitespace: Highlights trailing whitespace and can remove them all
+git clone https://github.com/ntpeters/vim-better-whitespace.git %TEMPDIR%\better-whitespace
 REM Conque: Run bash / cmd / powershell within vim
 git clone https://github.com/basepi/vim-conque %TEMPDIR%\conque
 REM ctrlsf: An ack/ag/pt powered search and view tool
