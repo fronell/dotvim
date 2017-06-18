@@ -157,9 +157,10 @@ set splitright
 " http://got-ravings.blogspot.com/2008/08/vim-pr0n-making-statuslines-that-own.html
 set laststatus=2                             " always show the status bar
 set statusline=[%n]\                         " buffer number
-set statusline+=[%{&ff}]\                    " file format
 set statusline+=%F\ %m\ %r                   " filename, modified, readonly
 set statusline+=%{&paste?'[paste]':''}\      " Shows if paste mode is enabld
+set statusline+=[%{&ff}]\                    " file format
+set statusline+=%y%*\                        " file type
 set statusline+=%{fugitive#statusline()}     " fugitive
 set statusline+=%=                           " Left/right seperator
 set statusline+=CWD:%{getcwd()}              " Current working directory
