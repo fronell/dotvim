@@ -66,10 +66,20 @@ func! ctrlsf#Search(args, ...) abort
 
     " if view mode is not specified, use 'g:ctrlsf_default_view_mode'
     let s:current_mode  = empty(a:000) ?
-                \ g:ctrlsf_default_view_mode :
+                \ s:InitViewMode() :
                 \ a:1
 
     call s:ExecSearch(s:current_query)
+endf
+
+" InitViewMode()
+"
+func! s:InitViewMode() abort
+    if ctrlsf#win#FindMainWindow() < 0
+        return g:ctrlsf_default_view_mode
+    else
+        return ctrlsf#CurrentMode()
+    endif
 endf
 
 " Update()
@@ -280,7 +290,7 @@ endf
 " '2' means split vertically
 "
 func! s:OpenFileInWindow(file, lnum, col, mode, split) abort
-    if a:mode == 1 && g:ctrlsf_auto_close
+    if a:mode == 1 && ctrlsf#opt#AutoClose()
         call s:Quit()
     endif
 
@@ -290,7 +300,7 @@ func! s:OpenFileInWindow(file, lnum, col, mode, split) abort
     else
         exec target_winnr . 'wincmd w'
 
-        if bufname('%') !~# a:file
+        if bufname('%') !=# a:file
             if a:split || (&modified && !&hidden)
                 if a:split == 2
                     exec 'silent vertical split ' . fnameescape(a:file)
@@ -320,7 +330,7 @@ endf
 " and never close CtrlSF window.
 "
 func! s:OpenFileInTab(file, lnum, col, mode) abort
-    if a:mode == 1 && g:ctrlsf_auto_close
+    if a:mode == 1 && ctrlsf#opt#AutoClose()
         call s:Quit()
     endif
 
@@ -372,7 +382,7 @@ func! s:OpenAndDraw() abort
     call ctrlsf#hl#HighlightMatch()
 
     " scroll up to top line
-    1normal z<CR>
+    1normal! ^
     call ctrlsf#NextMatch(1)
 endf
 

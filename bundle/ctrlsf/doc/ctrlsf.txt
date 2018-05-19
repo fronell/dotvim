@@ -255,13 +255,14 @@ alias for '-context'.
 '-filetype'                                             *ctrlsf_args_filetype*
 
 Defines which type of files should the search be restricted to. view
-`ack --help=typs` for all available types.
+`ack --help=types` for all available types.
 >
     :CtrlSF -filetype vim foo
 <
 '-filematch', '-G'                       *ctrlsf_args_G* *ctrlsf_args_filematch*
 
 Defines a pattern that only files whose name is matching will be searched.
+The pattern might depend on the backend being used.
 >
     :Ctrlsf -filematch .*\.wrproject foo
 <
@@ -296,6 +297,12 @@ Make this search be case-sensitive.
 Use pattern as regular expression.
 >
     :CtrlSF -R foo.*
+
+'-word', '-W'                                               *ctrlsf_args_word*
+
+Search only for whole words.
+>
+    :CtrlSF -W foo
 <
 '-smartcase'                                           *ctrlsf_args_smartcase*
 
@@ -306,6 +313,14 @@ Make this search be smart-cased.
 ================================================================================
 6. Options                                                      *ctrlsf-options*
 
+g:ctrlsf_absolute_file_path                      *'g:ctrlsf_absolute_file_path'*
+Default: 0
+'g:ctrlsf_absolute_file_path' defines whether CtrlSF uses absolute path or
+relative path (if possible) for files. This option is automatically applied if
+'autochdir' is enabled.
+>
+    let g:ctrlsf_absolute_file_path = 1
+<
 g:ctrlsf_ackprg                                              *'g:ctrlsf_ackprg'*
 Default: auto
 Available: 'ag', 'ack', 'pt', 'rg'
@@ -317,12 +332,21 @@ explicitly set it by
     let g:ctrlsf_ackprg = '/usr/local/bin/ag'
 <
 g:ctrlsf_auto_close                                      *'g:ctrlsf_auto_close'*
-Default: 1
-'g:ctrlsf_auto_close' defines how CtrlSF handle itself after you have opened
-a file from CtrlSF window. By default CtrlSF will close itself but you can
-prevent this behavior by setting this option to 0
+Default:
+    {
+        "normal" : 1,
+        "compact": 0
+    }
+'g:ctrlsf_auto_close' defines how CtrlSF handles itself in 'normal' and 'compact'
+view mode(|g:ctrlsf_default_view_mode|) respectively after you have opened a file
+from CtrlSF window. By default, CtrlSF will close itself in 'normal' view mode and
+keep open in 'compact' view mode.
+You can customize it as you will:
 >
-    let g:ctrlsf_auto_close = 0
+    let g:ctrlsf_auto_close = {
+        \ "normal" : 0,
+        \ "compact": 0
+        \ }
 <
 g:ctrlsf_case_sensitive                              *'g:ctrlsf_case_sensitive'*
 Default: 'smart'
@@ -442,6 +466,7 @@ Key id and its functionality:
     tab     - open file in a new tab.
     tabb    - open file in a background new tab.
     popen   - open preview window.
+    popenf  - open preview window in foreground.
     quit    - close main window.
     next    - jump to next match.
     prev    - jump to previous match.
@@ -459,6 +484,7 @@ Default:
         "tab"     : "t",
         "tabb"    : "T",
         "popen"   : "p",
+        "popenf"  : "P",
         "quit"    : "q",
         "next"    : "<C-J>",
         "prev"    : "<C-K>",
@@ -467,9 +493,17 @@ Default:
         "chgmode" : "M",
     }
 <
+Sometimes you may wish for a method to also perform a complementary action such
+as scrolling the window, or returning focus to the CtrlSF window. In that case
+you can specify the method's value as a dictionary with a 'key' and a 'suffix',
+which contains the additional keys to execute after the method. In the following
+example, 'suffix' will return focus to the CtrlSF window after 'openb' is
+executed.
+
 Example:
 >
     let g:ctrlsf_mapping = {
+        \ "openb": { key: "O", suffix: "<C-w>p" },
         \ "next": "n",
         \ "prev": "N",
         \ "openb": "",

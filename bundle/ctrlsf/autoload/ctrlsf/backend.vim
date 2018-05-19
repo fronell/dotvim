@@ -55,12 +55,12 @@ let s:backend_args_map = {
             \ 'ignorecase': '--ignore-case',
             \ 'matchcase': ''
             \ },
-        \ 'ignoredir': '',
+        \ 'ignoredir': '-g',
         \ 'regex': {
             \ '1': '',
             \ '0': '--fixed-strings'
             \ },
-        \ 'default': '--no-heading --color never --line-number'
+        \ 'default': '--no-heading --color never --line-number -H'
         \ }
     \ }
 
@@ -92,9 +92,15 @@ func! s:BuildCommand(args) abort
     let ignore_dir = ctrlsf#opt#GetIgnoreDir()
     let arg_name = s:backend_args_map[runner]['ignoredir']
     if !empty(arg_name)
-        for dir in ignore_dir
-            call add(tokens, arg_name . ' ' . shellescape(dir))
-        endfor
+        if runner ==# 'rg'
+            for dir in ignore_dir
+                call add(tokens, arg_name . ' !' . shellescape(dir))
+            endfor
+        else
+            for dir in ignore_dir
+                call add(tokens, arg_name . ' ' . shellescape(dir))
+            endfor
+        endif
     endif
 
     " regex
@@ -111,8 +117,12 @@ func! s:BuildCommand(args) abort
         endif
     endif
 
+    if !empty(ctrlsf#opt#GetOpt('word'))
+        call add(tokens, '-w')
+    endif
+
     " filematch (NOT SUPPORTED BY ALL BACKEND)
-    " support backend: ag, ack, pt
+    " support backend: ag, ack, pt, rg
     if !empty(ctrlsf#opt#GetOpt('filematch'))
         if runner ==# 'ag'
             call extend(tokens, [
@@ -121,6 +131,9 @@ func! s:BuildCommand(args) abort
                 \ ])
         elseif runner ==# 'pt'
             call add(tokens, printf("--file-search-regex=%s",
+                \ shellescape(ctrlsf#opt#GetOpt('filematch'))))
+        elseif runner ==# 'rg'
+            call add(tokens, printf("-g %s",
                 \ shellescape(ctrlsf#opt#GetOpt('filematch'))))
         elseif runner ==# 'ack'
             " pipe: 'ack -g ${filematch} ${path} |'

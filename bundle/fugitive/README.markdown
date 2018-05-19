@@ -66,7 +66,7 @@ If you don't have a preferred installation method, one option is to install
 and paste:
 
     cd ~/.vim/bundle
-    git clone git://github.com/tpope/vim-fugitive.git
+    git clone https://github.com/tpope/vim-fugitive.git
     vim -u NONE -c "helptags vim-fugitive/doc" -c q
 
 If your Vim version is below 7.2, I recommend also installing
@@ -75,24 +75,11 @@ other Git niceties.
 
 ## FAQ
 
-> I installed the plugin and started Vim.  Why don't any of the commands
-> exist?
+> Why don't any of the commands exist?
 
-Fugitive cares about the current file, not the current working
-directory.  Edit a file from the repository.
-
-> I opened a new tab.  Why don't any of the commands exist?
-
-Fugitive cares about the current file, not the current working
-directory.  Edit a file from the repository.
-
-> Why is `:Gbrowse` not using the right browser?
-
-`:Gbrowse` delegates to `git web--browse`, which is less than perfect
-when it comes to finding the right browser.  You can tell it the correct
-browser to use with `git config --global web.browser ...`.  On OS X, for
-example, you might want to set this to `open`.  See `git web--browse --help`
-for details.
+Fugitive cares about the current file, not the current working directory.
+Edit a file from the repository.  To avoid the blank window problem, favor
+commands like `:split` and `:tabedit` over commands like `:new` and `:tabnew`.
 
 > Here's a patch that automatically opens the quickfix window after
 > `:Ggrep`.

@@ -11,6 +11,7 @@ let s:option_list = {
     \ '-before'     : {'args': 1},
     \ '-context'    : {'args': 1},
     \ '-filetype'   : {'args': 1},
+    \ '-word'       : {'args': 0},
     \ '-filematch'  : {'args': 1},
     \ '-ignorecase' : {'args': 0},
     \ '-ignoredir'  : {'args': 1},
@@ -26,6 +27,7 @@ let s:option_list = {
     \ '-L': {'fullname': '-literal'},
     \ '-R': {'fullname': '-regex'},
     \ '-S': {'fullname': '-matchcase'},
+    \ '-W': {'fullname': '-word'},
     \ }
 
 " default values to options
@@ -169,6 +171,9 @@ func! ctrlsf#opt#GetPath() abort
             if empty(path)
                 if opt_fbroot ==# 'f'
                     let path = expand('%:p')
+                    if empty(path)
+                        let path = getcwd()
+                    endif
                 elseif opt_fbroot ==# 'w'
                     let path = getcwd()
                 endif
@@ -205,6 +210,12 @@ func! ctrlsf#opt#GetIgnoreDir() abort
         call add(ignore_dir, ctrlsf#opt#GetOpt("ignoredir"))
     endif
     return ignore_dir
+endf
+
+" AutoClose()
+"
+func! ctrlsf#opt#AutoClose() abort
+    return type(g:ctrlsf_auto_close) == type(0) ? g:ctrlsf_auto_close : g:ctrlsf_auto_close[ctrlsf#CurrentMode()]
 endf
 
 """""""""""""""""""""""""""""""""

@@ -161,6 +161,7 @@ CtrlSF has a lot of arguments you can use in search. Most arguments are similar 
 - `-R` - Use regular expression pattern.
 - `-I`, `-S` - Search case-insensitively (`-I`) or case-sensitively (`-S`).
 - `-C`, `-A`, `-B` - Specify how many context lines to be printed, identical to their counterparts in Ag/Ack.
+- `-W` - Only match whole words.
 
 Read `:h ctrlsf-arguments` for a full list of arguments.
 
@@ -200,10 +201,13 @@ Read `:h ctrlsf-arguments` for a full list of arguments.
 
 ## Configuration
 
-- `g:ctrlsf_auto_close` defines if CtrlSF close itself when you are opening some file. By default CtrlSF window will close automatically but you can prevent it by setting `g:ctrlsf_auto_close` to 0.
+- `g:ctrlsf_auto_close` defines if CtrlSF close itself when you are opening some file. By default, CtrlSF window will close automatically in `normal` view mode and keep open in `compact` view mode. You can customize the value as below:
 
     ```vim
-    let g:ctrlsf_auto_close = 0
+    let g:ctrlsf_auto_close = {
+        \ "normal" : 0,
+        \ "compact": 0
+        \}
     ```
 
 - `g:ctrlsf_case_sensitive` defines default case-sensitivity in search. Possible values are `yes`, `no` and `smart`, `smart` works the same as it is in vim. The default value is `smart`.
@@ -238,10 +242,12 @@ Read `:h ctrlsf-arguments` for a full list of arguments.
         \ }
     ```
 
-- `g:ctrlsf_mapping` defines maps used in result window and preview window. Value of this option is a dictionary, where key is a method and value is a key for mapping. An empty value can disable that method. You can just define a subset of full dictionary, those not defined functionalities will use default key mapping.
+
+- `g:ctrlsf_mapping` defines maps used in result window and preview window. Value of this option is a dictionary, where key is a method and value is a key for mapping. An empty value can disable that method. To specify additional keys to run after a method, use the extended form demonstrated below to specify a `suffix`. You can just define a subset of full dictionary, those not defined functionalities will use default key mapping.
 
     ```vim
     let g:ctrlsf_mapping = {
+        \ "openb": { key: "O", suffix: "<C-w>p" },
         \ "next": "n",
         \ "prev": "N",
         \ }
