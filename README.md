@@ -42,15 +42,18 @@ The instructions below use the Perl binary that comes with git for Windows:
     assoc .pl=Perl  
     ftype Perl="c:\Program Files\git\usr\bin\perl.exe" "%1" %*
     ```
-**Do not create the association using File Explorer!**  
+4. Open up gVim and perform a test Ack command
+5. If prompted to associate with perl.exe, make sure to check the box to "Always
+use this app" and press OK
 
-The Ack command should now work in Vim
+**Do not create the association using File Explorer!**  
 
 Reference used for creating the filetype association:
 
 http://whitescreen.nicolaas.net/programming/windows-shebangs
 
-It also describes how to associate without an extension in Windows.
+It also describes how to associate an app for files without an extension in
+Windows.
 
 ### ctags for Windows
 
