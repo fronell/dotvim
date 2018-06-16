@@ -4,6 +4,7 @@ set FTPLUGINDIR=ftplugin
 
 REM We use a temp dir so we can exclude .git and .gitignore files when we
 REM copy the clones to the bundle dir
+rmdir /Q /S %TEMPDIR%
 mkdir %TEMPDIR%
 
 REM Ack: Vim interface for ack
@@ -24,6 +25,9 @@ REM Bbye: Deleting a buffer without closing the window
 git clone https://github.com/moll/vim-bbye.git %TEMPDIR%\bbye
 REM Better Whitespace: Highlights trailing whitespace and can remove them all
 git clone https://github.com/ntpeters/vim-better-whitespace.git %TEMPDIR%\better-whitespace
+REM Space Jam: This plugin automatically removes trailing whitespace for ruby, python, javascript, et al
+REM This plugin provides automated removal of whitespace while "Better Whitespace" provides highlighting
+git clone https://github.com/rondale-sc/vim-spacejam.git %TEMPDIR%\spacejam
 REM ctrlsf: An ack/ag/pt powered search and view tool
 git clone https://github.com/dyng/ctrlsf.vim.git %TEMPDIR%\ctrlsf
 REM Ctrl-P: Fuzzy finder for files/tags/buffers
@@ -36,6 +40,9 @@ REM gitv: Provides a commit browser for the repo or a specific file
 git clone https://github.com/gregsexton/gitv.git %TEMPDIR%\gitv
 REM jedi-vim: awesome Python autocompletion with VIM
 git clone --recursive https://github.com/davidhalter/jedi-vim.git %TEMPDIR%\jedi-vim
+cd %TEMPDIR%\jedi-vim
+git submodule update --init
+cd ..\..\
 REM L9: Dependency for autocomplpop
 git clone https://github.com/vim-scripts/L9.git %TEMPDIR%\L9
 REM The Platinum Searcher: Vim interface for pt
@@ -48,8 +55,6 @@ REM Ruby: Provides general support for Ruby like text-objects/motions/omnicomple
 git clone https://github.com/vim-ruby/vim-ruby.git %TEMPDIR%\ruby
 REM Ruby Text-Objects: Provides Ruby text-objects for selecting text in and around blocks
 git clone https://github.com/nelstrom/vim-textobj-rubyblock.git %TEMPDIR%\textobj-rubyblock
-REM Space Jam: This plugin automatically removes trailing whitespace for ruby, python, javascript, et al
-git clone https://github.com/rondale-sc/vim-spacejam.git %TEMPDIR%\spacejam
 REM Solarized: Colorscheme
 git clone https://github.com/altercation/vim-colors-solarized.git %TEMPDIR%\colors-solarized
 REM Surround: Makes handling surrounding structures like '' () [] fun!

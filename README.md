@@ -1,20 +1,41 @@
-# Installation
-## Linux
+__TOC__
+
+<!--ts-->
+   * [Linux Setup](#linux-setup)
+   * [Windows Setup](#windows-setup)
+      * [ack](#ack)
+      * [ctags](#ctags)
+      * [Jedi Python Module](#jedi-python-module)
+
+<!-- Added by: Chris Wornell, at: 2018-06-16T18:52-05:00 -->
+
+<!--te-->
+
+# Linux Setup
+
+Install the appropriate Vim package for the distrobution to get scripting support
+
+Distro | Package
+-|-
+RHEL | vim-enhanced
+Ubuntu | vim-nox
 
 The steps below delete the existing Vim configuration so be careful!
 
-    cd ~
-    rm -f ~/.vimrc
-    rm -rf ~/.vim
-    git clone git@github.com:fronell/dotvim.git
-    ln -s ~/dotvim .vim
-    ln -s ~/dotvim/vimrc ~/.vimrc
-    # Used by ctags in Vim
-    touch ~/.vimtags
+```bash
+cd ~
+rm -f ~/.vimrc
+rm -rf ~/.vim
+git clone git@github.com:fronell/dotvim.git
+ln -s ~/dotvim .vim
+ln -s ~/dotvim/vimrc ~/.vimrc
+# Used by ctags in Vim
+touch ~/.vimtags
+```
 
-## Windows
+# Windows Setup
 
-Download Vim from the following URL:
+The following URL contains a Vim for Windows that is compiled with scripting support and continually updated.  Download and extract to any folder of choice:
 
 https://tuxproject.de/projects/vim/x64/
 
@@ -25,23 +46,27 @@ The steps below delete the existing Vim configuration so be careful!
 
 From a console with Admin rights (Admin is needed to create symlinks):
 
-    cd %USERPROFILE%
-    rmdir vimfiles /S /Q
-    git clone https://github.com/fronell/dotvim.git vimfiles
-    del _vimrc
-    mklink _vimrc vimfiles\vimrc
+```
+cd %USERPROFILE%
+rmdir vimfiles /S /Q
+git clone https://github.com/fronell/dotvim.git vimfiles
+del _vimrc
+mklink _vimrc vimfiles\vimrc
+```
 
-### Ack for Windows
+## ack
 
-The instructions below use the Perl binary that comes with git for Windows:
+Required by plugin [Ack](https://github.com/mileszs/ack.vim.git)
 
-1. Download the single-file version of ack from http://beyondgrep.com/install/
+The setup instructions below use the Perl binary that comes with [git for Windows](https://git-scm.com):
+
+1. Download the single-file version of ack from https://beyondgrep.com/install/
 2. Rename the file to ack.pl and place it in a directory thats in %PATH%
 3. From a console with Admin rights, run the following commands:
-    ```
-    assoc .pl=Perl  
-    ftype Perl="c:\Program Files\git\usr\bin\perl.exe" "%1" %*
-    ```
+```
+assoc .pl=Perl  
+ftype Perl="c:\Program Files\git\usr\bin\perl.exe" "%1" %*
+```
 4. Open up gVim and perform a test Ack command
 5. If prompted to associate with perl.exe, make sure to check the box to "Always
 use this app" and press OK
@@ -55,7 +80,20 @@ http://whitescreen.nicolaas.net/programming/windows-shebangs
 It also describes how to associate an app for files without an extension in
 Windows.
 
-### ctags for Windows
+## ctags
+
+Required by the following plugins:
+
+* [Ctrl-P](https://github.com/ctrlpvim/ctrlp.vim)
+* [Tagbar](https://github.com/majutsushi/tagbar.git)
+
+Setup instructions:
 
 1. Download ctags for Windows from http://ctags.sourceforge.net/
 2. Place ctags.exe in a directory thats in %PATH%
+
+## Jedi Python Module
+
+Required by plugin [jedi-vim](https://github.com/davidhalter/jedi-vim)
+
+Setup instructions:

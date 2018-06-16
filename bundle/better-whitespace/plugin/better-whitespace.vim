@@ -15,6 +15,10 @@ function! s:InitVariable(var, value)
     endif
 endfunction
 
+" Set the highlight color for trailing whitespaces
+call s:InitVariable('g:better_whitespace_ctermcolor', 'red')
+call s:InitVariable('g:better_whitespace_guicolor', '#FF0000')
+
 " Operator for StripWhitespace (empty to disable)
 call s:InitVariable('g:better_whitespace_operator', '<leader>s')
 
@@ -90,7 +94,7 @@ endfunction
 function! s:WhitespaceInit()
     " Check if the user has already defined highlighting for this group
     if hlexists("ExtraWhitespace") == 0 || synIDattr(synIDtrans(hlID("ExtraWhitespace")), "bg") == -1
-        highlight ExtraWhitespace ctermbg = red guibg = #FF0000
+        execute 'highlight ExtraWhitespace ctermbg = '.g:better_whitespace_ctermcolor. ' guibg = '.g:better_whitespace_guicolor
     endif
     let s:better_whitespace_initialized = 1
 endfunction
@@ -104,21 +108,16 @@ endfunction
 
 " Enable the whitespace highlighting
 function! s:EnableWhitespace()
-    if b:better_whitespace_enabled != 1
-        let b:better_whitespace_enabled = 1
-        call <SID>WhitespaceInit()
-        call <SID>SetupAutoCommands()
-        call <SID>Echo("Whitespace Highlighting: Enabled")
-    endif
+    let b:better_whitespace_enabled = 1
+    call <SID>Echo("Whitespace Highlighting: Enabled")
+    call <SID>SetupAutoCommands()
 endfunction
 
 " Disable the whitespace highlighting
 function! s:DisableWhitespace()
-    if b:better_whitespace_enabled != 0
-        let b:better_whitespace_enabled = 0
-        call <SID>SetupAutoCommands()
-        call <SID>Echo("Whitespace Highlighting: Disabled")
-    endif
+    let b:better_whitespace_enabled = 0
+    call <SID>Echo("Whitespace Highlighting: Disabled")
+    call <SID>SetupAutoCommands()
 endfunction
 
 " Toggle whitespace highlighting on/off
@@ -277,7 +276,7 @@ endfunction
 function! s:ShouldStripWhitespace()
     call s:InitVariable('b:strip_whitespace_on_save', -1)
     if b:strip_whitespace_on_save < 0
-        if b:better_whitespace_enabled < 0
+        if !exists('b:better_whitespace_enabled') || b:better_whitespace_enabled < 0
             " We can't initialize buffer value properly yet, fall back to global one
             return g:strip_whitespace_on_save
         else
