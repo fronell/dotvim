@@ -13,7 +13,7 @@ __TOC__
 
 # Linux Setup
 
-Install the appropriate Vim package to get scripting support
+Install the appropriate Vim package to get scripting support:
 
 Distro | Package
 ------ | -------
@@ -91,9 +91,3 @@ Setup instructions:
 
 1. Download ctags for Windows from https://github.com/universal-ctags/ctags-win32/releases
 2. Extract ctags.exe in a directory thats in %PATH%
-
-## Jedi Python Module
-
-Required by plugin [jedi-vim](https://github.com/davidhalter/jedi-vim)
-
-Setup instructions:

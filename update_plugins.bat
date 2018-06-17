@@ -55,8 +55,6 @@ REM Ruby: Provides general support for Ruby like text-objects/motions/omnicomple
 git clone https://github.com/vim-ruby/vim-ruby.git %TEMPDIR%\ruby
 REM Ruby Text-Objects: Provides Ruby text-objects for selecting text in and around blocks
 git clone https://github.com/nelstrom/vim-textobj-rubyblock.git %TEMPDIR%\textobj-rubyblock
-REM Solarized: Colorscheme
-git clone https://github.com/altercation/vim-colors-solarized.git %TEMPDIR%\colors-solarized
 REM Surround: Makes handling surrounding structures like '' () [] fun!
 git clone https://github.com/tpope/vim-surround.git %TEMPDIR%\surround
 REM Syntastic: Syntax checker
