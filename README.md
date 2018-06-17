@@ -13,11 +13,11 @@ __TOC__
 
 # Linux Setup
 
-Install the appropriate Vim package for the distrobution to get scripting support
+Install the appropriate Vim package to get scripting support
 
 Distro | Package
--|-
-RHEL | vim-enhanced
+------ | -------
+RHEL   | vim-enhanced
 Ubuntu | vim-nox
 
 The steps below delete the existing Vim configuration so be careful!
