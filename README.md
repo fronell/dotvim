@@ -58,7 +58,7 @@ mklink _vimrc vimfiles\vimrc
 
 Required by plugin [Ack](https://github.com/mileszs/ack.vim.git)
 
-The setup instructions below use the Perl binary that comes with [git for Windows](https://git-scm.com):
+The following instructions use the Perl binary that comes with [git for Windows](https://git-scm.com):
 
 1. Download the single-file version of ack from https://beyondgrep.com/install/
 2. Rename the file to ack.pl and place it in a directory thats in %PATH%
@@ -89,8 +89,8 @@ Required by the following plugins:
 
 Setup instructions:
 
-1. Download ctags for Windows from http://ctags.sourceforge.net/
-2. Place ctags.exe in a directory thats in %PATH%
+1. Download ctags for Windows from https://github.com/universal-ctags/ctags-win32/releases
+2. Extract ctags.exe in a directory thats in %PATH%
 
 ## Jedi Python Module
 
