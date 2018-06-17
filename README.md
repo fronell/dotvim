@@ -5,9 +5,6 @@ __TOC__
    * [Windows Setup](#windows-setup)
       * [ack](#ack)
       * [ctags](#ctags)
-
-<!-- Added by: Chris Wornell, at: 2018-06-16T19:17-05:00 -->
-
 <!--te-->
 
 # Linux Setup
