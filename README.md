@@ -50,7 +50,9 @@ del _vimrc
 mklink _vimrc vimfiles\vimrc
 ```
 
-## pt (The Platinum Searcher)
+## pt
+
+This Vim setup uses The Platinum Searcher (pt) binary for searching through files in place of ack/ag/grep/etc...
 
 Required by the plugin [pt.vim](https://github.com/nazo/pt.vim)
 
@@ -60,6 +62,8 @@ Setup instructions:
 2. Place pt.exe in a directory thats in %PATH%
 
 ## ctags
+
+Used to generate an index of source code files that can be used to navigate between different points of interest.
 
 Required by the following plugins:
 
