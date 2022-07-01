@@ -27,13 +27,13 @@ syntax enable "Enable syntax highlighting
 syntax on
 
 if has("gui_running")
-  colorscheme gotham
+  colorscheme base16-default-dark
   set guioptions-=m  "remove menu bar
   set guioptions-=T  "remove toolbar
   set guioptions-=r  "remove right-hand scroll bar
   set guioptions-=l  "remove left-hand scroll bar
 else
-  colorscheme gotham
+  colorscheme base16-default-dark
 endif
 
 set encoding=utf8
