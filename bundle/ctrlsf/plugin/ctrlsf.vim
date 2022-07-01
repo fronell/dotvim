@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 " Loading Guard {{{1
@@ -85,9 +85,13 @@ if !exists('g:ctrlsf_absolute_file_path')
 endif
 " }}}
 
-" g:ctrlsf_ackprg {{{2
-if !exists('g:ctrlsf_ackprg')
-    let g:ctrlsf_ackprg = ctrlsf#backend#Detect()
+" g:ctrlsf_backend {{{2
+if !exists('g:ctrlsf_backend')
+    if exists('g:ctrlsf_ackprg')
+        let g:ctrlsf_backend = g:ctrlsf_ackprg
+    else
+        let g:ctrlsf_backend = ctrlsf#backend#Detect()
+    endif
 endif
 " }}}
 
@@ -97,6 +101,26 @@ if !exists('g:ctrlsf_auto_close')
         \ "normal" : 1,
         \ "compact": 0
         \ }
+endif
+" }}}
+
+" g:ctrlsf_auto_focus {{{2
+if !exists('g:ctrlsf_auto_focus')
+    let g:ctrlsf_auto_focus = {
+        \ "at" : "none",
+        \ }
+else
+    " set default 'duration_less_than': 1000 milliseconds
+    if g:ctrlsf_auto_focus['at'] ==# 'done'
+        \ && !has_key(g:ctrlsf_auto_focus, 'duration_less_than')
+        let g:ctrlsf_auto_focus['duration_less_than'] = 1000
+    endif
+endif
+" }}}
+
+" g:ctrlsf_auto_preview {{{2
+if !exists('g:ctrlsf_auto_preview')
+    let g:ctrlsf_auto_preview = 0
 endif
 " }}}
 
@@ -111,10 +135,16 @@ if !exists('g:ctrlsf_confirm_save')
     let g:ctrlsf_confirm_save = 1
 endif
 " }}}
-"
+
 " g:ctrlsf_confirm_unsaving_quit {{{2
 if !exists('g:ctrlsf_confirm_unsaving_quit')
     let g:ctrlsf_confirm_unsaving_quit = 1
+endif
+" }}}
+
+" g:ctrlsf_compact_position {{{2
+if !exists('g:ctrlsf_compact_position')
+    let g:ctrlsf_compact_position = 'bottom_outside'
 endif
 " }}}
 
@@ -148,6 +178,24 @@ if !exists('g:ctrlsf_extra_backend_args')
 endif
 " }}}
 
+" g:ctrlsf_extra_root_markers {{{2
+if !exists('g:ctrlsf_extra_root_markers')
+    let g:ctrlsf_extra_root_markers = []
+endif
+" }}}
+
+" g:ctrlsf_fold_result {{{2
+if !exists('g:ctrlsf_fold_result')
+    let g:ctrlsf_fold_result = 0
+endif
+" }}}
+
+" g:ctrlsf_follow_symlinks {{{2
+if !exists('g:ctrlsf_follow_symlinks')
+    let g:ctrlsf_follow_symlinks = 1
+endif
+" }}}
+
 " g:ctrlsf_ignore_dir {{{2
 if !exists('g:ctrlsf_ignore_dir')
     let g:ctrlsf_ignore_dir = []
@@ -171,11 +219,15 @@ let s:default_mapping = {
     \ "popen"   : "p",
     \ "popenf"  : "P",
     \ "quit"    : "q",
+    \ "stop"    : "<C-C>",
     \ "next"    : "<C-J>",
     \ "prev"    : "<C-K>",
+    \ "nfile"   : "<C-N>",
+    \ "pfile"   : "<C-P>",
     \ "chgmode" : "M",
     \ "pquit"   : "q",
     \ "loclist" : "",
+    \ "fzf"     : "<C-T>",
     \ }
 
 if !exists('g:ctrlsf_mapping')
@@ -185,6 +237,12 @@ else
         let g:ctrlsf_mapping[key] = get(g:ctrlsf_mapping, key,
             \ s:default_mapping[key])
     endfo
+endif
+" }}}
+
+" g:ctrlsf_parse_speed {{{
+if !exists('g:ctrlsf_parse_speed')
+    let g:ctrlsf_parse_speed = 300
 endif
 " }}}
 
@@ -209,6 +267,12 @@ if !exists('g:ctrlsf_position')
 endif
 " }}}
 
+" g:ctrlsf_preview_position {{{2
+if !exists('g:ctrlsf_preview_position')
+    let g:ctrlsf_preview_position = 'outside'
+endif
+" }}}
+
 " g:ctrlsf_regex_pattern {{{2
 if !exists('g:ctrlsf_regex_pattern')
     let g:ctrlsf_regex_pattern = 0
@@ -218,6 +282,16 @@ endif
 " g:ctrlsf_selected_line_hl {{{2
 if !exists('g:ctrlsf_selected_line_hl')
     let g:ctrlsf_selected_line_hl = 'p'
+endif
+" }}}
+
+" g:ctrlsf_search_mode {{{2
+if !exists('g:ctrlsf_search_mode')
+    if !has('nvim') && (v:version < 800 || (v:version == 800 && !has('patch1039')))
+        let g:ctrlsf_search_mode = 'sync'
+    else
+        let g:ctrlsf_search_mode = 'async'
+    endif
 endif
 " }}}
 
@@ -235,6 +309,12 @@ if !exists('g:ctrlsf_winsize')
     let g:ctrlsf_winsize = 'auto'
 endif
 " }}}
+
+" g:ctrlsf_compact_winsize {{{2
+if !exists('g:ctrlsf_compact_winsize')
+    let g:ctrlsf_compact_winsize = '10'
+endif
+" }}}
 " }}}
 
 " Commands {{{1
@@ -245,6 +325,8 @@ com! -n=0                                         CtrlSFUpdate   call ctrlsf#Upd
 com! -n=0                                         CtrlSFClose    call ctrlsf#Quit()
 com! -n=0                                         CtrlSFClearHL  call ctrlsf#ClearSelectedLine()
 com! -n=0                                         CtrlSFToggle   call ctrlsf#Toggle()
+com! -n=0                                         CtrlSFStop     call ctrlsf#StopSearch()
+com! -n=0                                         CtrlSFFocus    call ctrlsf#Focus()
 " }}}
 
 " Maps {{{1

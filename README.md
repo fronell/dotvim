@@ -22,7 +22,7 @@ The steps below delete the existing Vim configuration so be careful!
 cd ~
 rm -f ~/.vimrc
 rm -rf ~/.vim
-git clone git@github.com:fronell/dotvim.git
+git clone https://github.com/fronell/dotvim.git
 ln -s ~/dotvim .vim
 ln -s ~/dotvim/vimrc ~/.vimrc
 # Used by ctags in Vim
@@ -50,31 +50,14 @@ del _vimrc
 mklink _vimrc vimfiles\vimrc
 ```
 
-## ack
+## pt (The Platinum Searcher)
 
-Required by plugin [Ack](https://github.com/mileszs/ack.vim.git)
+Required by the plugin [pt.vim](https://github.com/nazo/pt.vim)
 
-The following instructions use the Perl binary that comes with [git for Windows](https://git-scm.com):
+Setup instructions:
 
-1. Download the single-file version of ack from https://beyondgrep.com/install/
-2. Rename the file to ack.pl and place it in a directory thats in %PATH%
-3. From a console with Admin rights, run the following commands:
-```
-assoc .pl=Perl  
-ftype Perl="c:\Program Files\git\usr\bin\perl.exe" "%1" %*
-```
-4. Open up gVim and perform a test Ack command
-5. If prompted to associate with perl.exe, make sure to check the box to "Always
-use this app" and press OK
-
-**Do not create the association using File Explorer!**  
-
-Reference used for creating the filetype association:
-
-http://whitescreen.nicolaas.net/programming/windows-shebangs
-
-It also describes how to associate an app for files without an extension in
-Windows.
+1. Download pt for Windows from https://github.com/monochromegane/the_platinum_searcher/releases
+2. Place pt.exe in a directory thats in %PATH%
 
 ## ctags
 
@@ -86,4 +69,4 @@ Required by the following plugins:
 Setup instructions:
 
 1. Download ctags for Windows from https://github.com/universal-ctags/ctags-win32/releases
-2. Extract ctags.exe in a directory thats in %PATH%
+2. Place ctags.exe in a directory thats in %PATH%

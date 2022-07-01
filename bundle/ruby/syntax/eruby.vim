@@ -41,7 +41,11 @@ elseif !exists("b:eruby_subtype") && main_syntax == 'eruby'
 endif
 
 if !exists("b:eruby_nest_level")
-  let b:eruby_nest_level = strlen(substitute(substitute(substitute(expand("%:t"),'@','','g'),'\c\.\%(erb\|rhtml\)\>','@','g'),'[^@]','','g'))
+  if &syntax =~# '\<eruby\.eruby\>'
+    let b:eruby_nest_level = strlen(substitute(substitute(&filetype,'\C\<eruby\>','@','g'),'[^@]','','g'))
+  else
+    let b:eruby_nest_level = strlen(substitute(substitute(substitute(expand("%:t"),'@','','g'),'\c\.\%(erb\|rhtml\)\>','@','g'),'[^@]','','g'))
+  endif
 endif
 if !b:eruby_nest_level
   let b:eruby_nest_level = 1

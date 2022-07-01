@@ -355,16 +355,6 @@ function! vimfiler#init#_start(path, ...) abort
     return
   endif
 
-  " Detect autochdir option.
-  if exists('+autochdir') && &autochdir
-    call vimfiler#util#print_error(
-          \ 'Detected autochdir!')
-    call vimfiler#util#print_error(
-          \ 'vimfiler don''t work if you set autochdir option.')
-    return
-  endif
-  
-
   let path = a:path
   if vimfiler#util#is_win_path(path)
     let path = vimfiler#util#substitute_path_separator(
@@ -539,7 +529,7 @@ function! s:create_vimfiler_buffer(path, context) abort
   endif
 
   " Save swapfile option.
-  let swapfile_save = &swapfile
+  let swapfile_save = &l:swapfile
 
   if !exists('t:vimfiler')
     let t:vimfiler = {}
@@ -548,10 +538,10 @@ function! s:create_vimfiler_buffer(path, context) abort
   let t:vimfiler[bufnr('%')] = 1
 
   try
-    set noswapfile
+    setlocal noswapfile
     let loaded = s:manager.open(bufname, 'silent edit')
   finally
-    let &g:swapfile = swapfile_save
+    let &l:swapfile = swapfile_save
   endtry
 
   let t:vimfiler[bufnr('%')] = 1

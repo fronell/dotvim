@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 """""""""""""""""""""""""""""""""
@@ -18,17 +18,45 @@ let s:current_query = ''
 " Basic process: query, parse, render and display.
 "
 func! s:ExecSearch(args) abort
+    " reset all states
+    call s:Reset()
+
     try
         call ctrlsf#opt#ParseOptions(a:args)
     catch /ParseOptionsException/
         return -1
     endtry
 
-    if ctrlsf#backend#SelfCheck() < 0
+    if ctrlsf#SelfCheck() < 0
         return -1
     endif
 
+    call ctrlsf#profile#Sample("StartSearch")
+    if g:ctrlsf_search_mode ==# 'sync'
+        call s:DoSearchSync(a:args)
+    else
+        call s:DoSearchAsync(a:args)
+    endif
+endf
+
+" s:Reset()
+"
+" Reset all states of many modules
+"
+func! s:Reset() abort
+    call ctrlsf#db#Reset()
+    call ctrlsf#opt#Reset()
+    call ctrlsf#win#Reset()
+    call ctrlsf#view#Reset()
+    call ctrlsf#async#Reset()
+    call ctrlsf#profile#Reset()
+endf
+
+" s:DoSearchSync()
+"
+func! s:DoSearchSync(args) abort
     let [success, output] = ctrlsf#backend#Run(a:args)
+    call ctrlsf#profile#Sample("FinishSearch")
     if !success
         call ctrlsf#log#Error('Failed to call backend. Error messages: %s',
             \ output)
@@ -40,16 +68,68 @@ func! s:ExecSearch(args) abort
                 \ ctrlsf#backend#LastErrors())
 
     " Parsing
-    call ctrlsf#db#ParseAckprgResult(output)
+    call ctrlsf#profile#Sample("StartParse")
+    call ctrlsf#db#ParseBackendResult(output)
+    call ctrlsf#profile#Sample("FinishParse")
 
     " Open and draw contents
+    call ctrlsf#profile#Sample("StartDraw")
     call s:OpenAndDraw()
+    call ctrlsf#profile#Sample("FinishDraw")
 
     " populate quickfix and location list
-    if g:ctrlsf_populate_qflist
-        call setqflist(ctrlsf#db#MatchListQF())
+    call ctrlsf#PopulateQFList()
+endf
+
+" s:DoSearchAsync()
+"
+func! s:DoSearchAsync(args) abort
+    call ctrlsf#backend#RunAsync(a:args)
+
+    " open window and clear previous result
+    call s:Open()
+    call ctrlsf#win#SetModifiableByViewMode(0)
+    call ctrlsf#buf#WriteString("Searching...")
+    if g:ctrlsf_auto_focus['at'] !=# 'start'
+        call ctrlsf#win#FocusCallerWindow()
     endif
-    call setloclist(0, ctrlsf#db#MatchListQF())
+endf
+
+" SelfCheck()
+"
+func! ctrlsf#SelfCheck() abort
+    if !exists('g:ctrlsf_backend') || empty(g:ctrlsf_backend)
+        call ctrlsf#log#Error("Option 'g:ctrlsf_backend' is not defined or empty
+            \ .")
+        return -99
+    endif
+
+    let prg = g:ctrlsf_backend
+
+    if !executable(prg)
+        call ctrlsf#log#Error('Can not locate %s in PATH, make sure you have it
+            \ installed.', prg)
+        return -2
+    endif
+
+    if v:version < 704 || (v:version == 704 && !has('patch1557'))
+        call ctrlsf#log#Error('CtrlSF does not support your Vim.
+                    \ Please update your Vim to at least 7.4.1557.')
+        return -3
+    endif
+
+    if g:ctrlsf_search_mode ==# 'async'
+                \ && !has('nvim')
+                \ && (v:version < 800 || (v:version == 800 && !has('patch1039')))
+        call ctrlsf#log#Error('Asynchronous searching is not supported for your Vim.
+                    \ Please make sure you are using Vim 8.0.1039+ or NeoVim.')
+        return -3
+    endif
+
+    if g:ctrlsf_indent < 2
+        call ctrlsf#log#Error("g:ctrlsf_indent can't be less than 2.")
+        return -3
+    endif
 endf
 
 " Search()
@@ -110,6 +190,11 @@ endf
 " SwitchViewMode()
 "
 func! ctrlsf#SwitchViewMode() abort
+    if ctrlsf#async#IsSearching()
+        call ctrlsf#log#Warn("Can't switch view mode when searching is processing.")
+        return
+    endif
+
     let next = ctrlsf#CurrentMode() ==# 'normal' ? 'compact' : 'normal'
 
     " set current view mode
@@ -202,10 +287,27 @@ func! ctrlsf#ToggleMap() abort
     endif
 endf
 
+" Focus()
+"
+" Focus the first match in result window. Do nothing if cursor has already
+" focused result window.
+"
+func! ctrlsf#Focus() abort
+    if !ctrlsf#win#InMainWindow() && ctrlsf#win#FocusMainWindow() != -1
+        call ctrlsf#win#FocusFirstMatch()
+    endif
+endf
+
 " JumpTo()
 "
-func! ctrlsf#JumpTo(mode) abort
-    let [file, line, match] = ctrlsf#view#Locate(line('.'))
+func! ctrlsf#JumpTo(mode, ...) abort
+    if a:0 == 0
+        let [file, line, match] = ctrlsf#view#Locate(line('.'))
+    elseif a:0 == 3
+        let [file, line, match] = a:000
+    else
+        throw 'UnexpectedArguments'
+    endif
 
     if empty(file) || empty(line)
         return
@@ -246,9 +348,11 @@ endf
 "
 " Move cursor to the next match after current cursor position.
 "
-func! ctrlsf#NextMatch(forward) abort
+func! ctrlsf#NextMatch(forward, ...) abort
+    let file_based = get(a:, 1, 0)
+
     let [_, cur_vlnum, cur_vcol, _] = getpos('.')
-    let [vlnum, vcol] = ctrlsf#view#FindNextMatch(a:forward, &wrapscan)
+    let [vlnum, vcol] = ctrlsf#view#FindNextMatch(a:forward, &wrapscan, file_based)
 
     if vlnum > 0
         if a:forward && (vlnum < cur_vlnum || (vlnum == cur_vlnum && vcol < cur_vcol))
@@ -262,15 +366,35 @@ func! ctrlsf#NextMatch(forward) abort
         endif
 
         call cursor(vlnum, vcol)
+        normal! zv
+
+        if g:ctrlsf_auto_preview
+            call ctrlsf#JumpTo('preview')
+        endif
     endif
+endf
+
+" PopulateQFList()
+"
+func! ctrlsf#PopulateQFList()
+    let qflist = ctrlsf#db#MatchListQF()
+    if g:ctrlsf_populate_qflist
+        call setqflist(qflist)
+    endif
+    call setloclist(ctrlsf#win#FindMainWindow(), qflist)
 endf
 
 " CurrentMode()
 "
 func! ctrlsf#CurrentMode()
     let vmode = empty(s:current_mode) ? 'normal' : s:current_mode
-    call ctrlsf#log#Debug("Current Mode: %s", vmode)
     return vmode
+endf
+
+" StopSearch()
+"
+func! ctrlsf#StopSearch()
+    call ctrlsf#async#StopSearch()
 endf
 
 " OpenFileInWindow()
@@ -290,8 +414,13 @@ endf
 " '2' means split vertically
 "
 func! s:OpenFileInWindow(file, lnum, col, mode, split) abort
-    if a:mode == 1 && ctrlsf#opt#AutoClose()
-        call s:Quit()
+    if a:mode == 1
+        " close preview window if file is opened in current tab
+        call ctrlsf#preview#ClosePreviewWindow()
+
+        if ctrlsf#opt#AutoClose()
+            call s:Quit()
+        endif
     endif
 
     let target_winnr = ctrlsf#win#FindTargetWindow(a:file)
@@ -352,7 +481,7 @@ endf
 func! s:PreviewFile(file, lnum, col, follow) abort
     call ctrlsf#preview#OpenPreviewWindow()
 
-    if !exists('b:ctrlsf_file') || b:ctrlsf_file !=# a:file
+    if !exists('b:ctrlsf_file') || empty(b:ctrlsf_file) || b:ctrlsf_file !=# a:file
         let b:ctrlsf_file = a:file
 
         call ctrlsf#buf#WriteFile(a:file)
@@ -372,23 +501,27 @@ func! s:PreviewFile(file, lnum, col, follow) abort
     endif
 endf
 
+" s:Open()
+"
+func! s:Open() abort
+    call ctrlsf#win#OpenMainWindow()
+    call ctrlsf#hl#ReloadSyntax()
+    call ctrlsf#hl#HighlightMatch()
+endf
+
 " s:OpenAndDraw()
 "
 func! s:OpenAndDraw() abort
-    call ctrlsf#win#OpenMainWindow()
+    call s:Open()
     call ctrlsf#win#Draw()
     call ctrlsf#buf#ClearUndoHistory()
-    call ctrlsf#hl#ReloadSyntax()
-    call ctrlsf#hl#HighlightMatch()
-
-    " scroll up to top line
-    1normal! ^
-    call ctrlsf#NextMatch(1)
+    call ctrlsf#win#FocusFirstMatch()
 endf
 
 " s:Quit()
 "
 func! s:Quit() abort
+    call ctrlsf#async#StopSearch()
     call ctrlsf#preview#ClosePreviewWindow()
     call ctrlsf#win#CloseMainWindow()
 endf

@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 " preview buffer's name
@@ -24,21 +24,44 @@ func! ctrlsf#preview#OpenPreviewWindow() abort
 
     if vmode ==# 'normal'
         " normal mode
-        if g:ctrlsf_position == "left" || g:ctrlsf_position == "right"
-            let ctrlsf_width  = winwidth(0)
-            let winsize = min([&columns-ctrlsf_width, ctrlsf_width])
-        else
-            let ctrlsf_height  = winheight(0)
-            let winsize = min([&lines-ctrlsf_height, ctrlsf_height])
-        endif
+        if g:ctrlsf_preview_position == 'inside'
+            if g:ctrlsf_position == "left" || g:ctrlsf_position == "right" ||
+             \ g:ctrlsf_position == 'left_local' || g:ctrlsf_position == 'right_local'
+                let winsize = winheight(0) / 2
+            else
+                let winsize = winwidth(0) / 2
+            endif
 
-        let openpos = {
-                \ 'bottom': 'leftabove',  'right' : 'leftabove vertical',
-                \ 'top'   : 'rightbelow',  'left' : 'rightbelow vertical'}
-                \[g:ctrlsf_position] . ' '
+            let openpos = {
+                    \ 'bottom': 'rightbelow vertical',
+                    \ 'right' : 'rightbelow',
+                    \ 'right_local' : 'rightbelow',
+                    \ 'top'   : 'rightbelow vertical',
+                    \ 'left' : 'rightbelow',
+                    \ 'left_local' : 'rightbelow'}
+                    \[g:ctrlsf_position] . ' '
+        else
+            if g:ctrlsf_position == "left" || g:ctrlsf_position == "right" ||
+             \ g:ctrlsf_position == 'left_local' || g:ctrlsf_position == 'right_local'
+                let ctrlsf_width  = winwidth(0)
+                let winsize = min([&columns-ctrlsf_width, ctrlsf_width])
+            else
+                let ctrlsf_height  = winheight(0)
+                let winsize = min([&lines-ctrlsf_height, ctrlsf_height])
+            endif
+
+            let openpos = {
+                    \ 'bottom'      : 'leftabove',
+                    \ 'right'       : 'leftabove vertical',
+                    \ 'right_local' : 'leftabove vertical',
+                    \ 'top'         : 'rightbelow',
+                    \ 'left'        : 'rightbelow vertical',
+                    \ 'left_local'  : 'rightbelow vertical'}
+                    \[g:ctrlsf_position] . ' '
+        endif
     else
         " compact mode
-        let winsize = &lines - 20
+        let winsize = &lines - winheight(0) - 10
         let openpos = 'leftabove'
     endif
 
@@ -80,7 +103,7 @@ func! s:InitPreviewWindow() abort
 
     augroup ctrlsfp
         au!
-        au BufUnload <buffer> unlet b:ctrlsf_file
+        au BufUnload <buffer> call setbufvar(s:PREVIEW_BUF_NAME, "ctrlsf_file", "")
     augroup END
 endf
 

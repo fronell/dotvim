@@ -141,15 +141,6 @@ endfunction
 function! unite#util#has_vimproc(...) abort
   return call(s:get_process().has_vimproc, a:000)
 endfunction
-function! unite#util#has_lua() abort
-  " Note: Disabled if_lua feature if less than 7.3.885.
-  " Because if_lua has double free problem.
-  " Note: Cannot use lua interface in Windows environment if encoding is not utf-8.
-  " https://github.com/Shougo/unite.vim/issues/466
-  return has('lua') && (v:version > 703 || v:version == 703 && has('patch885'))
-        \ && (!unite#util#is_windows() ||
-        \     &encoding ==# 'utf-8' || &encoding ==# 'latin1')
-endfunction
 function! unite#util#has_timers() abort
   " Vim timers implementation has bug.
   " It cannot stop callback handler in the handler.
@@ -315,8 +306,8 @@ endfunction"}}}
 function! unite#util#expand(path) abort "{{{
   return s:get_prelude().substitute_path_separator(
         \ (a:path =~ '^\~') ? fnamemodify(a:path, ':p') :
-        \ (a:path =~ '^\$\h\w*') ? substitute(a:path,
-        \               '^\$\h\w*', '\=eval(submatch(0))', '') :
+        \ (a:path =~ '^\$\h\w*') && exists(matchstr(a:path, '\$\h\w*')) ?
+        \   substitute(a:path, '^\$\h\w*', '\=eval(submatch(0))', '') :
         \ a:path)
 endfunction"}}}
 function! unite#util#set_default_dictionary_helper(variable, keys, value) abort "{{{

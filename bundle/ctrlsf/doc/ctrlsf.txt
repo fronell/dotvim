@@ -2,7 +2,7 @@
 
 Author:  Ye Ding <dygvirus@gmail.com>
 Licence: Vim licence, see |license|
-Version: 1.9.0
+Version: 2.0.0
 
 
            .-') _   _  .-')              .-')                                 ~
@@ -140,6 +140,9 @@ mode:
   Search {pattern}. Default is search by literal. Show result in a new CtrlSF
   window if there is no existing one, otherwise reuse that one.
 
+  If the {pattern} starts with '-', add a ' -- ' before it to distinguish it
+  from the [arguments].
+
   [arguments] are all valid CtrlSF arguments, see |ctrlsf-arguments| for what
   they are.
 
@@ -167,6 +170,10 @@ mode:
   If you have turned on |g:ctrlsf_selected_line_hl|, use this command to clear
   highlighting on the selected line.
 
+:CtrlSFStop                                                        *:CtrlSFStop*
+
+  Stop a background searching process.
+
 :CtrlSFToggle                                                    *:CtrlSFToggle*
 
   Open the CtrlSF window if it is closed, or vice versa.
@@ -175,6 +182,10 @@ mode:
 
   Toggle CtrlSF's default key mapping. This command can be used in CtrlSF
   window only.
+
+:CtrlSFFocus                                                      *:CtrlSFFocus*
+
+  Move cursor to CtrlS window and focus the first result.
 
 ================================================================================
 4. Key Maps                                                     *ctrlsf-keymaps*
@@ -220,9 +231,18 @@ mode:
 
     <q>            Quit CtrlSF. Also close preview window if any.
 
+    <C-C>          Stop running asynchronous searching.
+
     <C-J>          Move cursor to next match.
 
     <C-K>          Move cursor to previous match.
+
+    <C-N>          Move cursor to first match of next file.
+
+    <C-P>          Move cursor to fist match of previous file.
+
+    <C-T>          (If you have fzf installed) Use fzf to fuzzy search through
+                   result.
 
   Maps by default in preview window:
 
@@ -252,9 +272,9 @@ alias for '-context'.
 >
     :CtrlSF -C 0 foo
 <
-'-filetype'                                             *ctrlsf_args_filetype*
+'-filetype', '-T'                                       *ctrlsf_args_filetype*
 
-Defines which type of files should the search be restricted to. view
+Defines which type of files should the search be restricted to. View
 `ack --help=types` for all available types.
 >
     :CtrlSF -filetype vim foo
@@ -279,6 +299,12 @@ option depends on what backend you are using. The actual option used
 here is '--ignore' for ag and '--ignore-dir' for ack.
 >
     :CtrlSF -ignoredir "bower_components" 'console.log'
+<
+'-hidden'                                                 *ctrlsf_args_hidden*
+
+Search hidden files and directories.
+>
+    :CtrlSF -hidden foo
 <
 '-literal', '-L'                           *ctrlsf_args_L* *ctrlsf_args_literal*
 
@@ -321,15 +347,19 @@ relative path (if possible) for files. This option is automatically applied if
 >
     let g:ctrlsf_absolute_file_path = 1
 <
-g:ctrlsf_ackprg                                              *'g:ctrlsf_ackprg'*
+g:ctrlsf_backend                                              *'g:ctrlsf_backend'*
 Default: auto
 Available: 'ag', 'ack', 'pt', 'rg'
-'g:ctrlsf_ackprg' defines the path of ack/ag which CtrlSF will use as its
+'g:ctrlsf_backend' defines the path of ack/ag which CtrlSF will use as its
 backend. If nothing is given, CtrlSF will try to figure out a proper backend.
-Preferred order is 'ag' > 'ack' > 'rg' > 'pt' > 'ack-grep'. You can also
+Preferred order is 'rg' > 'ag' > 'ack' > 'pt' > 'ack-grep'. You can also
 explicitly set it by
 >
-    let g:ctrlsf_ackprg = '/usr/local/bin/ag'
+    let g:ctrlsf_backend = 'ag'
+<
+or
+>
+    let g:ctrlsf_backend = '/usr/local/bin/ag'
 <
 g:ctrlsf_auto_close                                      *'g:ctrlsf_auto_close'*
 Default:
@@ -347,6 +377,34 @@ You can customize it as you will:
         \ "normal" : 0,
         \ "compact": 0
         \ }
+<
+g:ctrlsf_auto_focus                                      *'g:ctrlsf_auto_focus'*
+Default:
+    {
+        "at" : "none"
+    }
+'g:ctrlsf_auto_focus' defines which timing CtrlSF should focus result pane when
+working in async search mode. There are 3 possible value: 'none', 'start' and
+'done'. 'none' makes CtrlSF not focus at all, 'start' makes CtrlSF focus at
+search starting, 'done' makes CtrlSF focus at search finished, but ONLY for
+those immediately finished search. An additional option 'duration_less_than'
+is available for 'done', only searches finished within this timeout will be
+focused. When you have set 'at' to 'done' but not set 'duration_less_than', a
+default value '1000' will be used. Time unit for 'duration_less_than' is
+millisecond.
+Example:
+>
+    let g:ctrlsf_auto_focus = {
+        \ "at" : "done",
+        \ "duration_less_than": 1000
+        \ }
+<
+g:ctrlsf_auto_preview                                  *'g:ctrlsf_auto_preview'*
+Default: 0
+Defines whether CtrlSF shows the preview window automatically while moving from
+match to match in the results pane.
+>
+    let g:ctrlsf_auto_preview = 1
 <
 g:ctrlsf_case_sensitive                              *'g:ctrlsf_case_sensitive'*
 Default: 'smart'
@@ -378,6 +436,20 @@ Defines how many lines around the matching line will be printed. Use same format
 as its counterpart in Ag/Ack.
 >
     let g:ctrlsf_context = '-B 5 -A 3'
+<
+g:ctrlsf_compact_winsize                             *'g:ctrlsf_compact_winsize'*
+Default: '10'
+Available: 'auto', 'xx%', 'xx'
+Height of CtrlSF compact window. It accepts a string as its value and there are
+3 types of argument:
+>
+    'auto' : half of current vim window height.
+    'xx%'  : xx percent of current vim window size.
+    'xx'   : absolute size in characters.
+<
+Example:
+>
+    let g:ctrlsf_compact_winsize = '20%'
 <
 g:ctrlsf_debug_mode                                      *'g:ctrlsf_debug_mode'*
 Default: 0
@@ -435,6 +507,28 @@ useful when you are needing backend-specific features. Acceptable keys are
         \ 'pt': '--home-ptignore'
         \ }
 <
+g:ctrlsf_extra_root_markers                      *'g:ctrlsf_extra_root_markers'*
+Default: []
+Defines a list of root markers that helps CtrlSF recognizing project root. For
+example, this option is set '[".root"]', and there exists a file or directory
+'/home/your/project/.root', then '/home/your/project' will be recognized as
+project root.
+>
+    let g:ctrlsf_extra_root_markers = ['.root']
+<
+g:ctrlsf_fold_result                                    *'g:ctrlsf_fold_result'*
+Default: 0
+Defines whether the result is folded by default. You can always fold or unfold
+manually by "zc" and "zo".
+>
+    let g:ctrlsf_fold_result = 1
+<
+g:ctrlsf_follow_symlinks                            *'g:ctrlsf_follow_symlinks'*
+Default: 1
+Defines whether the backend should follow symbolic links or not.
+>
+    let g:ctrlsf_follow_symlinks = 0
+<
 g:ctrlsf_ignore_dir                                      *'g:ctrlsf_ignore_dir'*
 Default: ''
 Defines directories that will be ignored by default. It's useful for backend
@@ -442,11 +536,11 @@ that does not respect to '.gitignore'.
 >
     let g:ctrlsf_ignore_dir = ['bower_components', 'node_modules']
 <
-
 g:ctrlsf_indent                                              *'g:ctrlsf_indent'*
 Default: 4
 Defines how many spaces are placed between line number and line content. You
-can set a sane small value for more compact view.
+can set a sane small value for more compact view, but the value can't be less
+than 2.
 >
     let g:ctrlsf_indent = 2
 <
@@ -470,9 +564,12 @@ Key id and its functionality:
     quit    - close main window.
     next    - jump to next match.
     prev    - jump to previous match.
+    nfile   - jump to first match of next file.
+    pfile   - jump to first match of previous file.
     pquit   - close preview window.
     loclist - open location list in main window.
     chgmode - switch view mode.
+    stop    - stop running asynchronous searching.
 <
 Default:
 >
@@ -488,9 +585,12 @@ Default:
         "quit"    : "q",
         "next"    : "<C-J>",
         "prev"    : "<C-K>",
+        "nfile"   : "<C-N>",
+        "pfile"   : "<C-P>",
         "pquit"   : "q",
         "loclist" : "",
         "chgmode" : "M",
+        "stop"    : "<C-C>",
     }
 <
 Sometimes you may wish for a method to also perform a complementary action such
@@ -509,6 +609,14 @@ Example:
         \ "openb": "",
         \ }
 <
+g:ctrlsf_parse_speed                                    *'g:ctrlsf_parse_speed'*
+Default: 300
+The count of lines which CtrlSF will parse in every 200 milliseconds. If you
+find the default value is too large and make your Vim slow during asynchronous
+searching, you can set it a more moderate value:
+>
+    let g:ctrlsf_parse_speed = 100
+<
 g:ctrlsf_populate_qflist                            *'g:ctrlsf_populate_qflist'*
 Default: 0
 Defines whether CtrlSF will feed quickfix and location list with search result.
@@ -519,11 +627,35 @@ If you are used to vim builtin quickfix list and want to use |:cnext|,
 <
 g:ctrlsf_position                                          *'g:ctrlsf_position'*
 Default: 'left'
-Available: 'left', 'right', 'top', 'bottom'
-By default CtrlSF window will be opened at left. You can also specify for it to
-be opened 'top', 'right', or 'bottom'. E.g.:
+Available: 'left', 'left_local', 'right', 'right_local', 'top', 'bottom'
+By default CtrlSF window will be opened in a new split on the left edge of the
+tabpage. You can also specify for it to be opened 'left_local', top', 'right',
+'right_local' or 'bottom'. 'left_local' and 'right_local' cause the window to
+be opened adjacent to the current window instead of at the edge of the tabpage.
 >
     let g:ctrlsf_position = 'bottom'
+<
+g:ctrlsf_compact_position                           *'g:ctrlsf_compact_position'*
+Default: 'bottom_outside'
+Available: 'bottom_inside', 'bottom_outside', 'top_inside', 'top_outside'
+Defines where CtrlSF places the main window when opened in 'compact' view
+(`g:ctrlsf_default_view_mode`). 'bottom_outside' and 'top_outside' open the
+CtrlSF window at the bottom or top of the tabpage respectively, so that the window
+takes up the entire width of the screen. 'bottom_inside' and 'top_inside' open
+the compact view inside the current vertical split, so that the width of the
+CtrlSF window is the same as the width of the current split. This option has
+no effect in `normal` view mode.
+>
+    let g:ctrlsf_compact_position = 'bottom_inside'
+<
+g:ctrlsf_preview_position                           *'g:ctrlsf_preview_position'*
+Default: 'outside'
+Available: 'inside', 'outside'
+Defines where CtrlSF places preview window. By default preivew window is opened
+next to the main window. By setting to 'inside', preview window will be opened
+within the main window.
+>
+    let g:ctrlsf_preview_position = 'inside'
 <
 g:ctrlsf_regex_pattern                                *'g:ctrlsf_regex_pattern'*
 Default: 0
@@ -532,6 +664,14 @@ pattern literally, if you want CtrlSF use regular expression by default (like
 Ack/Ag), you can set it to 1.
 >
     let g:ctrlsf_regex_pattern = 1
+<
+g:ctrlsf_search_mode                                    *'g:ctrlsf_search_mode'*
+Default: 'async' for version 8.0+, 'sync' for others
+Available: 'sync', 'async'
+Defines whether CtrlSF works in a synchronous or an asynchronous way. Note
+that 'async' is only supported for Vim with version above 8.0.
+>
+    let g:ctrlsf_search_mode = 'async'
 <
 g:ctrlsf_selected_line_hl                          *'g:ctrlsf_selected_line_hl'*
 Default: 'p'
@@ -554,8 +694,7 @@ this value is empty, means no key is mapped for this feature.
 >
     let g:ctrlsf_toggle_map_key = '\t'
 <
-
-g:ctrlsf_winsize                                                *'g:ctrlsf_width'*
+g:ctrlsf_winsize                                              *'g:ctrlsf_winsize'*
 Default: 'auto'
 Available: 'auto', 'xx%', 'xx'
 Size of CtrlSF window. This is its width if the window opens vertically (to the

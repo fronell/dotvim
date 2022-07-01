@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 " Loading Guard {{{1
@@ -33,3 +33,4 @@ endf
 if exists('g:loaded_airline')
     call airline#add_statusline_func('CtrlSFStatusLine')
 endif
+" }}}

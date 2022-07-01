@@ -2,13 +2,26 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
-func! s:Summary(resultset) abort
+let s:rendered_par = 0
+let s:rendered_match = 0
+let s:cur_file = ''
+let s:procbar_dots = 0
+
+func! s:Summary(procbar) abort
     let files   = len(ctrlsf#db#FileResultSet())
     let matches = len(ctrlsf#db#MatchList())
-    return [printf("%s matched lines across %s files", matches, files)]
+    if a:procbar == 100
+        return [printf("%s matched lines across %s files. Done!", matches, files)]
+    elseif a:procbar == 0
+        return [printf("%s matched lines across %s files.", matches, files)]
+    elseif a:procbar == -1
+        return [printf("%s matched lines across %s files. Cancelled.", matches, files)]
+    else
+        return [printf("%s matched lines across %s files. Searching%s", matches, files, repeat('.', a:procbar))]
+    endif
 endf
 
 func! s:Filename(paragraph) abort
@@ -27,7 +40,7 @@ func! s:Line(line) abort
     return [out]
 endf
 
-func! s:MatchLine(match) abort
+func! s:LineCompact(match) abort
     let out = printf("%s|%s col %s| %s",
                 \ a:match.filename,
                 \ a:match.lnum,
@@ -36,9 +49,22 @@ func! s:MatchLine(match) abort
     return [out]
 endf
 
+" ctrlsf#view#Indent()
+"
 func! ctrlsf#view#Indent() abort
     let maxlnum = ctrlsf#db#MaxLnum()
     return strlen(string(maxlnum)) + 1 + g:ctrlsf_indent
+endf
+
+" Reset()
+"
+" Reset all states of this module.
+"
+func! ctrlsf#view#Reset() abort
+    let s:rendered_par = 0
+    let s:rendered_match = 0
+    let s:cur_file = ''
+    let s:procbar_dots = 0
 endf
 
 " Render()
@@ -49,6 +75,7 @@ endf
 " Text of rendered view
 "
 func! ctrlsf#view#Render() abort
+    call ctrlsf#view#Reset()
     if ctrlsf#CurrentMode() ==# 'normal'
         return s:NormalView()
     else
@@ -56,18 +83,51 @@ func! ctrlsf#view#Render() abort
     endif
 endf
 
-func! s:NormalView() abort
+" RenderIncr()
+"
+" Render incrementally.
+"
+" Returns:
+" Text of rendered view to append
+"
+func! ctrlsf#view#RenderIncr(base_vlnum) abort
+    if ctrlsf#CurrentMode() ==# 'normal'
+        return s:NormalViewIncr(a:base_vlnum)
+    else
+        return s:CompactViewIncr(a:base_vlnum)
+    endif
+endf
+
+" RenderSummary()
+"
+" Render a summary.
+"
+func! ctrlsf#view#RenderSummary() abort
+    if g:ctrlsf_search_mode ==# 'sync'
+        return join(s:Summary(0), "\n")
+    else
+        if ctrlsf#async#IsSearching()
+            let s:procbar_dots = s:procbar_dots % 3 + 1
+            return join(s:Summary(s:procbar_dots), "\n")
+        elseif ctrlsf#async#IsCancelled()
+            return join(s:Summary(-1), "\n")
+        else
+            return join(s:Summary(100), "\n")
+        endif
+    endif
+endf
+
+" s:NormalViewIncr()
+"
+func! s:NormalViewIncr(base_vlnum) abort
     let resultset = ctrlsf#db#ResultSet()
-    let cur_file = ''
+    let to_render = resultset[s:rendered_par:-1]
 
     let view = []
 
-    " append summary
-    call extend(view, s:Summary(resultset))
-
-    for par in resultset
-        if cur_file !=# par.filename
-            let cur_file = par.filename
+    for par in to_render
+        if s:cur_file !=# par.filename
+            let s:cur_file = par.filename
             call extend(view, s:Filename(par))
         else
             call extend(view, s:Ellipsis())
@@ -76,28 +136,56 @@ func! s:NormalView() abort
         for line in par.lines
             call extend(view, s:Line(line))
 
-            let line.vlnum = len(view)
+            call line.set_vlnum(a:base_vlnum + len(view))
 
             if line.matched()
-                let line.match.vlnum = len(view)
-                let line.match.vcol  = line.match.col + ctrlsf#view#Indent()
+                call line.match.set_vpos(line.vlnum(), line.match.col + ctrlsf#view#Indent())
             endif
         endfo
     endfo
 
-    return join(view, "\n")
+    let s:rendered_par = s:rendered_par + len(to_render)
+
+    return view
 endf
 
-func! s:CompactView() abort
+" s:CompactViewIncr()
+"
+func! s:CompactViewIncr(base_vlnum) abort
     let matchlist = ctrlsf#db#MatchList()
+    let to_render = matchlist[s:rendered_match:-1]
 
     let view = []
 
-    for mat in matchlist
-        call extend(view, s:MatchLine(mat))
+    for mat in to_render
+        call extend(view, s:LineCompact(mat))
+
+        let vlnum = a:base_vlnum + len(view)
+        let indent = printf("%s|%s col %s| ",
+                    \ mat.filename,
+                    \ mat.lnum,
+                    \ mat.col)
+        let vcol = mat.col + len(indent)
+        call mat.set_vpos(vlnum, vcol, 'compact')
     endfo
 
-    return join(view, "\n")
+    let s:rendered_match = s:rendered_match + len(to_render)
+
+    return view
+endf
+
+" s:NormalView()
+"
+func! s:NormalView() abort
+    let summary = ctrlsf#view#RenderSummary()
+    let body = join(s:NormalViewIncr(1), "\n") " 1 stands for summary line
+    return summary . "\n" . body
+endf
+
+" s:CompactView()
+"
+func! s:CompactView() abort
+    return join(s:CompactViewIncr(0), "\n")
 endf
 
 " Locate()
@@ -188,16 +276,60 @@ endf
 " Returns:
 " [vlnum, vcol] line number and column number of next match
 "
-func! ctrlsf#view#FindNextMatch(forward, wrapscan) abort
+func! ctrlsf#view#FindNextMatch(forward, wrapscan, ...) abort
+    let file_based = get(a:, 1, 0)
+
+    if file_based
+        let vlnum = s:FindNextFile(a:forward)
+        call cursor(vlnum, 1)
+    endif
+
     let regex = ctrlsf#pat#MatchPerLineRegex(ctrlsf#CurrentMode())
-    let flag  = a:forward ? 'n' : 'nb'
+    let flag  = (a:forward || file_based) ? 'n' : 'nb'
     let flag .= a:wrapscan ? 'w' : 'W'
     return searchpos(regex, flag)
 endf
 
+func! s:FindNextFile(forward) abort
+    let vmode = ctrlsf#CurrentMode()
+    let fileset = ctrlsf#db#FileResultSet()
+
+    if empty(fileset)
+        return 0
+    endif
+
+    let cur_vlnum = line('.')
+
+    let left = 0
+    let right = len(fileset) - 1
+
+    while left <= right
+        let pivot = (left + right) / 2
+        let file = fileset[pivot]
+
+        if file.start_vlnum(vmode) > cur_vlnum
+            let right = pivot - 1
+        elseif file.end_vlnum(vmode) < cur_vlnum
+            let left = pivot + 1
+        else
+            let current = pivot
+            break
+        endif
+    endwh
+
+    if !exists('current')
+        let next = a:forward ? 0 : -1
+    else
+        let next = a:forward ?
+                    \ (current + 1) % len(fileset) :
+                    \ current - 1
+    endif
+    return fileset[next].first_match().vlnum(vmode)
+endf
+
 " Unrender()
 "
-" Return a 'ResultSet' which is derendered from {content}.
+" Return a 'ResultSet' which is unrendered from {content}.
 "
 func! ctrlsf#view#Unrender(content) abort
     let lines  = type(a:content) == 3 ? a:content : split(a:content, "\n")
@@ -227,7 +359,7 @@ func! ctrlsf#view#Unrender(content) abort
 
             if line ==# '....' || line ==# ''
                 break
-            elseif line !~ '\v^\d+[:-]'
+            elseif line !~ '\v^\d+[:-]\s{2,}'
                 " strip trailing colon
                 let next_file = substitute(line, ':$', '', '')
                 break

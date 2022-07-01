@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 " s:TranslateRegex()
@@ -108,8 +108,8 @@ endf
 
 " MatchPerLineRegex()
 "
-" Regular expression to match the matched word. Difference from HighlightRegex()
-" is that this pattern only matches the first matched word in each line.
+" Regular expression to match the matched word. Different from HighlightRegex(),
+" this pattern only hit the first match in a line.
 "
 func! ctrlsf#pat#MatchPerLineRegex(vmode) abort
     let base = ctrlsf#pat#Regex()

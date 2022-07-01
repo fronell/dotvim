@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 " ctrlsf buffer's name
@@ -13,6 +13,15 @@ let s:caller_win = {
     \ 'bufnr' : -1,
     \ 'winid' : 0,
     \ }
+
+" remember how many lines have been drawn
+let s:drawn_lines = 0
+
+" Reset(0
+"
+func! ctrlsf#win#Reset() abort
+    let s:drawn_lines = 0
+endf
 
 """""""""""""""""""""""""""""""""
 " Open & Close
@@ -41,7 +50,8 @@ func! ctrlsf#win#OpenMainWindow() abort
     if vmode ==# 'normal'
         " normal mode
         if g:ctrlsf_winsize =~ '\d\{1,2}%'
-            if g:ctrlsf_position == "left" || g:ctrlsf_position == "right"
+            if g:ctrlsf_position == "left" || g:ctrlsf_position == "right" ||
+             \ g:ctrlsf_position == 'left_local' || g:ctrlsf_position == 'right_local'
                 let winsize = &columns * str2nr(g:ctrlsf_winsize) / 100
             else
                 let winsize = &lines * str2nr(g:ctrlsf_winsize) / 100
@@ -49,7 +59,8 @@ func! ctrlsf#win#OpenMainWindow() abort
         elseif g:ctrlsf_winsize =~ '\d\+'
             let winsize = str2nr(g:ctrlsf_winsize)
         else
-            if g:ctrlsf_position == "left" || g:ctrlsf_position == "right"
+            if g:ctrlsf_position == "left" || g:ctrlsf_position == "right" ||
+             \ g:ctrlsf_position == 'left_local' || g:ctrlsf_position == 'right_local'
                 let winsize = &columns / 2
             else
                 let winsize = &lines / 2
@@ -57,13 +68,27 @@ func! ctrlsf#win#OpenMainWindow() abort
         endif
 
         let openpos = {
-              \ 'top'    : 'topleft',  'left'  : 'topleft vertical',
-              \ 'bottom' : 'botright', 'right' : 'botright vertical'}
+              \ 'top'         : 'topleft',
+              \ 'left'        : 'topleft vertical',
+              \ 'left_local'  : 'leftabove vertical',
+              \ 'bottom'      : 'botright',
+              \ 'right'       : 'botright vertical',
+              \ 'right_local' : 'rightbelow vertical'}
               \[g:ctrlsf_position] . ' '
     else
-        " compact mode: fixed window size and position
-        let winsize = 10
-        let openpos = 'botright'
+        if g:ctrlsf_compact_winsize =~ '\d\{1,2}%'
+            let winsize = &lines * str2nr(g:ctrlsf_compact_winsize) / 100
+        elseif g:ctrlsf_compact_winsize =~ '\d\+'
+            let winsize = str2nr(g:ctrlsf_compact_winsize)
+        else
+            let winsize = &lines / 2
+        endif
+        let openpos = {
+              \ 'bottom_outside': 'botright',
+              \ 'bottom_inside': 'rightbelow',
+              \ 'top_outside': 'topleft',
+              \ 'top_inside': 'leftabove',
+              \ }[g:ctrlsf_compact_position]
     endif
 
 
@@ -74,11 +99,7 @@ func! ctrlsf#win#OpenMainWindow() abort
     call s:InitMainWindow()
 
     " set 'modifiable' flag depending on current view mode
-    if ctrlsf#CurrentMode() ==# 'normal'
-        setl modifiable
-    else
-        setl nomodifiable
-    endif
+    call ctrlsf#win#SetModifiableByViewMode(1)
 
     " resize other windows
     call s:ResizeNeighborWins()
@@ -87,8 +108,48 @@ endf
 " Draw()
 "
 func! ctrlsf#win#Draw() abort
+    let s:drawn_lines = 0
     let content = ctrlsf#view#Render()
     silent! undojoin | keepjumps call ctrlsf#buf#WriteString(content)
+endf
+
+" DrawIncr()
+"
+func! ctrlsf#win#DrawIncr() abort
+    if ctrlsf#CurrentMode() == 'normal'
+        silent! undojoin | keepjumps
+                    \ call ctrlsf#buf#SetLine(s:MAIN_BUF_NAME, 1, ctrlsf#view#RenderSummary())
+        if s:drawn_lines == 0
+            let s:drawn_lines = 1
+        endif
+    endif
+
+    let new_lines = ctrlsf#view#RenderIncr(s:drawn_lines)
+    if !empty(new_lines)
+        silent! undojoin | keepjumps
+                    \ call ctrlsf#buf#SetLine(s:MAIN_BUF_NAME, s:drawn_lines + 1, new_lines)
+    endif
+    let s:drawn_lines = s:drawn_lines + len(new_lines)
+
+    if ctrlsf#CurrentMode() == 'compact' && ctrlsf#async#IsSearchDone()
+        " overwrite 'Searching...' to 'Nothing found' or 'Cancelled'
+        if empty(ctrlsf#db#ResultSet())
+            silent! undojoin | keepjumps
+                        \ call ctrlsf#buf#SetLine(s:MAIN_BUF_NAME, 1,
+                        \ ctrlsf#async#IsCancelled() ? "Cancelled." : "Nothing found!")
+            let s:drawn_lines = 1
+        endif
+    endif
+endf
+
+" SetModifiable()
+"
+func! ctrlsf#win#SetModifiableByViewMode(modifiable) abort
+    if ctrlsf#CurrentMode() ==# 'normal'
+        call setbufvar(s:MAIN_BUF_NAME, '&modifiable', a:modifiable)
+    else
+        call setbufvar(s:MAIN_BUF_NAME, '&modifiable', 0)
+    endif
 endf
 
 " CloseMainWindow()
@@ -152,8 +213,16 @@ func! s:InitMainWindow() abort
     setl winfixheight
     setl textwidth=0
     setl nospell
-    setl nofoldenable
+    setl foldenable
+    setl foldmethod=syntax
     setl cursorline
+
+    " fold
+    if g:ctrlsf_fold_result
+        setl foldlevel=0
+    else
+        setl foldlevel=99
+    endif
 
     " map
     call ctrlsf#buf#ToggleMap(1)
@@ -292,6 +361,14 @@ func! ctrlsf#win#FindTargetWindow(file) abort
     return 0
 endf
 
+" FocusFirstMatch()
+"
+func! ctrlsf#win#FocusFirstMatch() abort
+    " scroll up to top line
+    1normal! ^
+    call ctrlsf#NextMatch(1, 0)
+endf
+
 """""""""""""""""""""""""""""""""
 " Cursor
 """""""""""""""""""""""""""""""""
@@ -305,22 +382,22 @@ endf
 "
 func! ctrlsf#win#MoveCursor(wlnum, lnum, col) abort
     " Move cursor to specific position, and window stops at {wlnum} line
-    exec 'keepjumps normal ' . a:wlnum . "z\r"
+    exec 'keepjumps normal! ' . a:wlnum . "z\r"
     call cursor(a:lnum, a:col)
 
     " Open fold
-    normal zv
+    normal! zv
 endf
 
 " MoveCursorCentral()
 "
 func! ctrlsf#win#MoveCursorCentral(lnum, col) abort
     " Move cursor to specific position
-    exec 'keepjumps normal ' . a:lnum . 'z.'
+    exec 'keepjumps normal! ' . a:lnum . 'z.'
     call cursor(a:lnum, a:col)
 
     " Open fold
-    normal zv
+    normal! zv
 endf
 
 " MoveCursorCurrentLineMatch()
@@ -343,45 +420,47 @@ endf
 " BackupAllWinSize()
 "
 " Purpose of BackupAllWinSize() and RestoreAllWinSize() is to restore
-" width/height of fixed sized windows such like NERDTree's. As a result, we only
-" backup width/height of fixed window's to keep least side effects.
+" width/height of fixed sized windows such like NERDTree's.
 "
 func! ctrlsf#win#BackupAllWinSize()
-    let nr = 1
-    while winbufnr(nr) != -1
-        if getwinvar(nr, '&winfixwidth') || getwinvar(nr, '&winfixheight')
-            if type(getwinvar(nr, 'ctrlsf_winwidth_bak')) != 3
-                call setwinvar(nr, 'ctrlsf_winwidth_bak', [])
-            endif
-            call add(getwinvar(nr, 'ctrlsf_winwidth_bak'), winwidth(nr))
+    if !exists("t:ctrlsf_winrestcmd")
+        let t:ctrlsf_winrestcmd = []
+    endif
+    call add(t:ctrlsf_winrestcmd, join(s:BuildResizeCmd(winlayout(), 0, 0), '|'))
+endf
 
-            if type(getwinvar(nr, 'ctrlsf_winheight_bak')) != 3
-                call setwinvar(nr, 'ctrlsf_winheight_bak', [])
-            endif
-            call add(getwinvar(nr, 'ctrlsf_winheight_bak'), winheight(nr))
+func! s:BuildResizeCmd(layout, resize, vresize) abort
+    let cmds = []
+    if a:layout[0] ==# 'leaf'
+        let winnr = win_id2win(a:layout[1])
+        if a:resize
+            call add(cmds, printf('%dresize %d', winnr, winheight(winnr)))
         endif
-        let nr += 1
-    endwh
+        if a:vresize
+            call add(cmds, printf('vert %dresize %d', winnr, winwidth(winnr)))
+        endif
+    else
+        let nested_layout = a:layout[1]
+        let nested_len = len(nested_layout)
+        for i in range(nested_len)
+            let should_resize = (i + 1 != nested_len)
+            if a:layout[0] ==# 'col'
+                let cmds += s:BuildResizeCmd(nested_layout[i], should_resize, a:vresize)
+            else
+                let cmds += s:BuildResizeCmd(nested_layout[i], a:resize, should_resize)
+            endif
+        endfor
+    endif
+    return cmds
 endf
 
 " RestoreAllWinSize()
 "
 func! ctrlsf#win#RestoreAllWinSize()
-    let nr = 1
-    while winbufnr(nr) != -1
-        if getwinvar(nr, '&winfixwidth') || getwinvar(nr, '&winfixheight')
-            exec nr . 'wincmd w'
-
-            let width_stack = getwinvar(nr, 'ctrlsf_winwidth_bak')
-            if type(width_stack) == 3 && !empty(width_stack)
-                exec "vertical resize " . remove(width_stack, -1)
-            endif
-
-            let height_stack = getwinvar(nr, 'ctrlsf_winheight_bak')
-            if type(height_stack) == 3 && !empty(height_stack)
-                exec "resize " . remove(height_stack, -1)
-            endif
+    if exists("t:ctrlsf_winrestcmd") && !empty(t:ctrlsf_winrestcmd)
+        let winrestcmd = remove(t:ctrlsf_winrestcmd, -1)
+        if !empty(winrestcmd)
+            execute winrestcmd
         endif
-        let nr += 1
-    endwh
+    endif
 endf

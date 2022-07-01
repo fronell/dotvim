@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 " New()
@@ -20,11 +20,11 @@ func! ctrlsf#class#paragraph#New(buffer) abort
         \ 'range'     : function("ctrlsf#class#paragraph#Range"),
         \ 'lines'     : [],
         \ 'matches'   : function("ctrlsf#class#paragraph#Matches"),
-        \ 'setlnum'   : function("ctrlsf#class#paragraph#SetLnum"),
-        \ 'trim_tail' : function("ctrlsf#class#paragraph#TrimTail")
+        \ 'trim_tail' : function("ctrlsf#class#paragraph#TrimTail"),
+        \ '_matches'  : 0,
         \ }
 
-    for [fname, lnum, content] in a:buffer
+    for [_, lnum, content] in a:buffer
         call add(paragraph.lines, ctrlsf#class#line#New(fname, lnum, content))
     endfo
 
@@ -39,8 +39,9 @@ endf
 
 " Vlnum()
 "
-func! ctrlsf#class#paragraph#Vlnum() abort dict
-    return self.lines[0].vlnum
+func! ctrlsf#class#paragraph#Vlnum(...) abort dict
+    let vmode = get(a:, 1, 'normal')
+    return self.lines[0].vlnum(vmode)
 endf
 
 " Range()
@@ -52,23 +53,15 @@ endf
 " Matches()
 "
 func! ctrlsf#class#paragraph#Matches() abort dict
-    let matches = []
-    for line in self.lines
-        if line.matched()
-            call add(matches, line.match)
-        endif
-    endfo
-    return matches
-endf
-
-" SetLnum()
-"
-func! ctrlsf#class#paragraph#SetLnum(lnum) abort dict
-    let i = 0
-    for line in self.lines
-        call line.setlnum(a:lnum + i)
-        let i += 1
-    endfo
+    if type(self._matches) == type(0)
+        let self._matches = []
+        for line in self.lines
+            if line.matched()
+                call add(self._matches, line.match)
+            endif
+        endfo
+    endif
+    return self._matches
 endf
 
 " TrimTail()
@@ -82,9 +75,14 @@ endf
 " ModifyFileName()
 "
 func! s:ModifyFileName(filename) abort
-    if g:ctrlsf_absolute_file_path || &autochdir
-        return fnamemodify(a:filename, ":p")
+    if has('win32') || has('win64')
+        let filename = substitute(a:filename, '\\\\', '\', 'g')
     else
-        return fnamemodify(a:filename, ":.")
+        let filename = a:filename
+    endif
+    if g:ctrlsf_absolute_file_path || &autochdir
+        return fnamemodify(filename, ":p")
+    else
+        return fnamemodify(filename, ":.")
     endif
 endf

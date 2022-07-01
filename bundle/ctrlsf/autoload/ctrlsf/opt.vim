@@ -2,7 +2,7 @@
 " Description: An ack/ag/pt/rg powered code search and view tool.
 " Author: Ye Ding <dygvirus@gmail.com>
 " Licence: Vim licence
-" Version: 1.9.0
+" Version: 2.6.0
 " ============================================================================
 
 " option list of CtrlSF
@@ -19,6 +19,7 @@ let s:option_list = {
     \ '-matchcase'  : {'args': 0},
     \ '-regex'      : {'args': 0},
     \ '-smartcase'  : {'args': 0},
+    \ '-hidden'     : {'args': 0},
     \ '-A': {'fullname': '-after'},
     \ '-B': {'fullname': '-before'},
     \ '-C': {'fullname': '-context'},
@@ -27,6 +28,7 @@ let s:option_list = {
     \ '-L': {'fullname': '-literal'},
     \ '-R': {'fullname': '-regex'},
     \ '-S': {'fullname': '-matchcase'},
+    \ '-T': {'fullname': '-filetype'},
     \ '-W': {'fullname': '-word'},
     \ }
 
@@ -39,6 +41,14 @@ let s:default = {
 
 " options
 let s:options = {}
+
+" ctrlsf#opt#Reset()
+"
+" Reset all states of this module.
+"
+func! ctrlsf#opt#Reset() abort
+    let s:options = {}
+endf
 
 " OptionNames()
 "
@@ -141,7 +151,7 @@ func! ctrlsf#opt#GetPath() abort
             let resolved_path = expand(path, 0, 1)
 
             for r_path in resolved_path
-                call add(path_tokens, shellescape(r_path))
+                call add(path_tokens, r_path)
             endfo
         endfo
     else
@@ -162,9 +172,9 @@ func! ctrlsf#opt#GetPath() abort
 
             " try to find project root
             if opt_sroot ==# 'f'
-                let path = ctrlsf#fs#FindVcsRoot()
+                let path = ctrlsf#fs#FindProjectRoot()
             elseif opt_sroot ==# 'w'
-                let path = ctrlsf#fs#FindVcsRoot(getcwd())
+                let path = ctrlsf#fs#FindProjectRoot(getcwd())
             endif
 
             " fallback to specified root
@@ -180,7 +190,7 @@ func! ctrlsf#opt#GetPath() abort
             endif
         endif
 
-        call add(path_tokens, shellescape(path))
+        call add(path_tokens, path)
     endif
 
     return path_tokens
@@ -234,20 +244,25 @@ func! s:ParseOptions(options_str) abort
     let i = 0
     while i < len(tokens)
         let token = tokens[i]
+        let is_option = has_key(s:option_list, token)
         let i += 1
 
-        if !has_key(s:option_list, token)
+        if !is_option && !no_more_options
             if token == '--'
-              let no_more_options = 1
-              continue
-            elseif token =~# '^-' && !no_more_options
+                let no_more_options = 1
+                continue
+            elseif token =~# '^-'
                 call ctrlsf#log#Error("Unknown option '%s'. If you are user
                     \ from pre-v1.0, please be aware of that CtrlSF no longer
                     \ supports all options of ack and ag since v1.0. Read
-                    \ manual for CtrlSF its own options.", token)
+                    \ manual for CtrlSF its own options. If you are searching
+                    \ a pattern that starts with '-', please add a ' -- '
+                    \ before it.", token)
                 throw 'ParseOptionsException'
             endif
+        endif
 
+        if !is_option || no_more_options
             " resolve to PATTERN and PATH
             if !has_key(options, 'pattern')
                 let options['pattern'] = token
