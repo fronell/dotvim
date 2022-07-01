@@ -3,7 +3,7 @@ __TOC__
 <!--ts-->
    * [Linux Setup](#linux-setup)
    * [Windows Setup](#windows-setup)
-      * [ack](#ack)
+      * [pt](#pt)
       * [ctags](#ctags)
 <!--te-->
 
