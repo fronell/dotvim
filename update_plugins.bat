@@ -58,7 +58,7 @@ git clone https://github.com/tpope/vim-surround.git %TEMPDIR%\surround
 
 REM [==== GIT ====]
 REM Fugitive: Git management in Vim
-REM git clone https://github.com/tpope/vim-fugitive.git %TEMPDIR%\fugitive
+git clone https://github.com/tpope/vim-fugitive.git %TEMPDIR%\fugitive
 REM gitgutter: Shows a git diff in the sign column
 REM git clone https://github.com/airblade/vim-gitgutter.git %TEMPDIR%\gitgutter
 REM gitv: Provides a commit browser for the repo or a specific file
