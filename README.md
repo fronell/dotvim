@@ -1,12 +1,3 @@
-__TOC__
-
-<!--ts-->
-   * [Linux Setup](#linux-setup)
-   * [Windows Setup](#windows-setup)
-      * [pt](#pt)
-      * [ctags](#ctags)
-<!--te-->
-
 # Linux Setup
 
 Install the appropriate Vim package to get scripting support:
