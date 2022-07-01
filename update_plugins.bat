@@ -84,7 +84,7 @@ git clone https://github.com/nazo/pt.vim.git %TEMPDIR%\pt
 REM Rebuild the bundle directory
 rmdir /q /s %BUNDLEDIR%
 mkdir %BUNDLEDIR%
-robocopy temp\ bundle\ /mir /xd .git /xf .gitignore
+robocopy temp\ bundle\ /mir /xd .git .github /xf .gitignore
 rmdir /q /s %TEMPDIR%
 
 REM Rebuild ftplugin for plugins that don't come in bundle form
