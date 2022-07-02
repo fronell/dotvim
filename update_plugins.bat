@@ -55,6 +55,8 @@ REM It provides automated removal of whitespace while "Better Whitespace" provid
 git clone https://github.com/rondale-sc/vim-spacejam.git %TEMPDIR%\spacejam
 REM Surround: Makes handling surrounding structures like '' () [] fun!
 git clone https://github.com/tpope/vim-surround.git %TEMPDIR%\surround
+REM Togglelist: Allows for a binding to toggle the quicklist and locationlist
+git clone https://github.com/milkypostman/vim-togglelist.git %TEMPDIR%\togglelist
 
 REM [==== GIT ====]
 REM Fugitive: Git management in Vim
@@ -93,6 +95,9 @@ mkdir %FTPLUGINDIR%
 cd %FTPLUGINDIR%
 curl https://raw.githubusercontent.com/fronell/dotvim/master/ftplugin/python_fn.vim > python_vn.vim
 cd ..
+
+REM Generate Help Tags for new plugins or updated docs in existing plugins
+c:\cloud\apps\vim\vim.exe -c Helptags -c q
 
 REM Will manually add changes for now
 REM git add .

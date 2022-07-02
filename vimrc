@@ -53,8 +53,8 @@ set smarttab
 set shiftwidth=2 "1 tab == 2 spaces
 set tabstop=2
 
-set lbr    "Prevents word wrap from breaking words in the middle
-set tw=500 "Sets text width
+set lbr   "Prevents word wrap from breaking words in the middle
+set tw=80 "Enforces textwidth in buffer and also used by gq command
 
 set nosi      "Turn off Smart indent to fix issues with commenting in Python
 set wrap      "Wrap lines
@@ -306,11 +306,6 @@ nmap <script> <leader>ll :call ToggleLocationList()<CR>
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " n
-" VimFiler
-map <leader>nn :VimFiler<CR>
-map <leader>ne :VimFilerExplorer<CR>
-map <leader>nb :VimFilerBuffer<CR>
-map <leader>ns :VimFilerSplit<CR>
 
 " N
 "" Toggle line numbers
