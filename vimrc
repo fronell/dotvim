@@ -433,14 +433,6 @@ let g:acp_behaviorKeywordLength = 3
 " Ag
 let g:aghighlight=1
 
-" Conque
-"" Does not work, pass <C-e> in mappings as a workaround to open in normal mode
-let g:ConqueTerm_Color = 1
-let g:ConqueTerm_FastMode = 0
-let g:ConqueTerm_EscKey = '<C-e>'
-let g:ConqueTerm_InsertOnEnter = 0
-let g:ConqueTerm_PyVersion = 3
-
 " CtrlP
 "" Enable tag mode in CtrlP
 let g:ctrlp_extensions = ['tag']
@@ -451,9 +443,6 @@ let g:ctrlp_working_path_mode = 0
 let g:jedi#completions_command = "<C-N>"
 let g:jedi#completions_enabled = 0
 
-" NERDTree
-let NERDTreeWinSize = 50
-
 " Python-mode
 "" Set to python3 for Python 3
 let g:pymode_python = 'python'
@@ -463,7 +452,6 @@ let g:pymode_python = 'python'
 " Going to leave it enabled for now until I experience slow down issues
 "let g:syntastic_enable_highlighting=0
 let g:syntastic_python_checkers = ['pylint', 'python']
-
 let g:syntastic_mode_map = { "passive_filetypes": ["sh"] }
 
 " Taglist
