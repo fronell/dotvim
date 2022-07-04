@@ -146,7 +146,7 @@ nnoremap N Nzzzv
 set scrolloff=5
 
 " How splits should open by default
-set splitbelow
+set nosplitbelow
 set splitright
 
 

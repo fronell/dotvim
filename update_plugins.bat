@@ -39,8 +39,6 @@ git clone https://github.com/dirkwallenstein/vim-autocomplpop %TEMPDIR%\autocomp
 git clone https://github.com/moll/vim-bbye.git %TEMPDIR%\bbye
 :: L9: Dependency for autocomplpop
 git clone https://github.com/vim-scripts/L9.git %TEMPDIR%\L9
-:: Syntastic: Syntax checker
-git clone https://github.com/scrooloose/syntastic.git %TEMPDIR%\syntastic
 
 :: [==== GENERAL CODING ====]
 :: Better Whitespace: Highlights trailing whitespace and can remove them all
@@ -56,6 +54,8 @@ git clone https://github.com/tpope/vim-repeat.git %TEMPDIR%\repeat
 git clone https://github.com/rondale-sc/vim-spacejam.git %TEMPDIR%\spacejam
 :: Surround: Makes handling surrounding structures like '' () [] fun!
 git clone https://github.com/tpope/vim-surround.git %TEMPDIR%\surround
+:: Syntastic: Syntax checker
+git clone https://github.com/scrooloose/syntastic.git %TEMPDIR%\syntastic
 :: Tagbar: Displays tags ordered by scope
 git clone https://github.com/majutsushi/tagbar.git %TEMPDIR%\tagbar
 :: Togglelist: Allows for a binding to toggle the quicklist and locationlist
@@ -86,7 +86,7 @@ git clone https://github.com/ctrlpvim/ctrlp.vim %TEMPDIR%\ctrlp
 :: The Platinum Searcher: Vim interface for pt
 git clone https://github.com/nazo/pt.vim.git %TEMPDIR%\pt
 
-:: [==== SEARCH ====]
+:: [==== SHELL/TERMINAL ====]
 :: Deol: A dark powered shell for Neovim & Vim
 :: git clone https://github.com/Shougo/deol.nvim.git %TEMPDIR%\deol
 :: Dispatch: Leverage the power of Vim's compiler plugins without being bound by synchronicity
